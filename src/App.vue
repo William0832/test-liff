@@ -1,48 +1,53 @@
 <template>
   <div>
-    <h1>create-liff-app</h1>
-    <p v-if="message">{{ message }}</p>
-    <p v-if="error">
-      <code>{{ error }}</code>
+    <h1>點餐</h1>
+    <p>login: {{ module.isLogin }}</p>
+    <p v-if='module.message'>{{ module.message }}</p>
+    <p v-if='module.error'>
+      <code>{{ module.error }}</code>
     </p>
-    <a href="https://developers.line.biz/ja/docs/liff/" target="_blank" rel="noreferrer">
-      LIFF Documentation
-    </a>
   </div>
 </template>
 
 <script setup>
-import { onMounted, ref, reactive } from "vue";
-import liff from "@line/liff";
+import { onMounted, reactive } from 'vue'
+import liff from '@line/liff'
+import { useMenuStore } from './stores/menu'
 
-// export default {
-const message = ref('')
-const error = ref('')
+const menuStore = useMenuStore()
+
+console.log(menuStore.items)
+
+const module = reactive({
+  message: '',
+  error: '',
+  isLogin: false
+})
+
 onMounted(() => {
   liff
     .init({
       liffId: import.meta.env.VITE_LIFF_ID,
-      withLoginOnExternalBrowser: true
+      // withLoginOnExternalBrowser: true
     })
     .then(() => {
-      const isLogin = liff.isLoggedIn()
-      console.log(`isLogin: ${isLogin}`)
-      message.value = "LIFF init succeeded.";
+      module.isLogin = liff.isLoggedIn()
+      module.message = 'LIFF init succeeded.'
     })
     .catch((e) => {
-      message.value = "LIFF init failed.";
-      error.value = `${e}`;
+      module.message = 'LIFF init failed.'
+      module.error = `${e}`
     })
 })
 </script>
 
-<style>
-#app {
-  font-family: Avenir, Helvetica, Arial, sans-serif;
-  -webkit-font-smoothing: antialiased;
-  -moz-osx-font-smoothing: grayscale;
-  text-align: center;
-  color: #2c3e50;
-  margin-top: 60px;
-}
+<style lang="sass">
+#app 
+  font-family: Avenir, Helvetica, Arial, sans-serif
+  -webkit-font-smoothing: antialiased
+  -moz-osx-font-smoothing: grayscale
+  text-align: center
+  color: #2c3e50
+  margin-top: 60px
+
 </style>
