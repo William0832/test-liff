@@ -11,30 +11,29 @@
   </div>
 </template>
 
-<script>
+<script setup>
+import { onMounted, ref, reactive } from "vue";
 import liff from "@line/liff";
 
-export default {
-  data() {
-    return {
-      message: "",
-      error: ""
-    };
-  },
-  mounted() {
-    liff
-      .init({
-        liffId: import.meta.env.VITE_LIFF_ID
-      })
-      .then(() => {
-        this.message = "LIFF init succeeded.";
-      })
-      .catch((e) => {
-        this.message = "LIFF init failed.";
-        this.error = `${e}`;
-      });
-  }
-};
+// export default {
+const message = ref('')
+const error = ref('')
+onMounted(() => {
+  liff
+    .init({
+      liffId: import.meta.env.VITE_LIFF_ID,
+      withLoginOnExternalBrowser: true
+    })
+    .then(() => {
+      const isLogin = liff.isLoggedIn()
+      console.log(`isLogin: ${isLogin}`)
+      message.value = "LIFF init succeeded.";
+    })
+    .catch((e) => {
+      message.value = "LIFF init failed.";
+      error.value = `${e}`;
+    })
+})
 </script>
 
 <style>
