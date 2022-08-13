@@ -13,10 +13,10 @@
 import { onMounted, reactive } from 'vue'
 import liff from '@line/liff'
 import { useMenuStore } from './stores/menu'
-
+// import { useGapi } from 'vue-gapi'
+// const gApi = useGapi()
 const menuStore = useMenuStore()
 
-console.log(menuStore.items)
 
 const module = reactive({
   message: '',
@@ -24,20 +24,25 @@ const module = reactive({
   isLogin: false
 })
 
-onMounted(() => {
-  liff
-    .init({
+onMounted(async () => {
+  try {
+    await liff.init({
       liffId: import.meta.env.VITE_LIFF_ID,
-      // withLoginOnExternalBrowser: true
+      withLoginOnExternalBrowser: true
     })
-    .then(() => {
-      module.isLogin = liff.isLoggedIn()
-      module.message = 'LIFF init succeeded.'
-    })
-    .catch((e) => {
-      module.message = 'LIFF init failed.'
-      module.error = `${e}`
-    })
+    module.isLogin = liff.isLoggedIn()
+    module.message = 'LIFF init succeeded.'
+  } catch (err) {
+    module.message = 'LIFF init failed.'
+    module.error = `${err}`
+  }
+  // try {
+  //   const res = await gApi.login()
+  //   console.log(res)
+  // } catch (err) {
+  //   console.error(err)
+  //   module.error = `${err.details}`
+  // }
 })
 </script>
 
