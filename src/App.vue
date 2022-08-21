@@ -1,24 +1,32 @@
-<template>
-  <div>
-    <h1>點餐</h1>
-    <p>login: {{ module.isLogin }}</p>
-    <p v-if='module.message'>{{ module.message }}</p>
-    <p v-if='module.error'>
-      <code>{{ module.error }}</code>
-    </p>
-  </div>
+<template lang="pug">
+.container.p-0.position-relative.h-100.d-flex.flex-column
+  router-view
+  //- ImgWall(:imgs="shop.imgs")
+  //- ShopInfo(v-bind="shop", :nowState="nowState")
+  //- Menu(
+  //-   :showMenuTypes="showMenuTypes"
+  //-   :items="items"
+  //- )
+  //- .action-box.position-sticky.bottom-0.p-3
+  //-   button.btn.btn-primary.w-100.btn-order 開始點餐
 </template>
 
 <script setup>
+// import { storeToRefs } from 'pinia'
 import { onMounted, reactive } from 'vue'
 import liff from '@line/liff'
-import { useMenuStore } from './stores/menu'
-// import { useGapi } from 'vue-gapi'
-// const gApi = useGapi()
-const menuStore = useMenuStore()
+// import { useShopStore } from './stores/shop'
+// import { useMenuStore } from './stores/menu'
+// import ShopInfo from './components/ShopInfo.vue'
+// import ImgWall from './components/ImgWall.vue'
+// import Menu from './components/Menu/index.vue'
 
+// const shopStore = useShopStore()
+// const menuStore = useMenuStore()
 
-const module = reactive({
+// const { shop, nowState } = storeToRefs(shopStore)
+// const { showMenuTypes, items } = storeToRefs(menuStore)
+const lineUserData = reactive({
   message: '',
   error: '',
   isLogin: false
@@ -28,13 +36,13 @@ onMounted(async () => {
   try {
     await liff.init({
       liffId: import.meta.env.VITE_LIFF_ID,
-      withLoginOnExternalBrowser: true
+      withLoginOnExternalBrowser: false
     })
-    module.isLogin = liff.isLoggedIn()
-    module.message = 'LIFF init succeeded.'
+    lineUserData.isLogin = liff.isLoggedIn()
+    lineUserData.message = 'LIFF init succeeded.'
   } catch (err) {
-    module.message = 'LIFF init failed.'
-    module.error = `${err}`
+    lineUserData.message = 'LIFF init failed.'
+    lineUserData.error = `${err}`
   }
   // try {
   //   const res = await gApi.login()
@@ -47,12 +55,16 @@ onMounted(async () => {
 </script>
 
 <style lang="sass">
+html, body
+  width: 100%
+  height: 100%
+  padding: 0
+  margin: 0
 #app 
   font-family: Avenir, Helvetica, Arial, sans-serif
   -webkit-font-smoothing: antialiased
   -moz-osx-font-smoothing: grayscale
-  text-align: center
-  color: #2c3e50
-  margin-top: 60px
+  height: 100vh
+
 
 </style>
