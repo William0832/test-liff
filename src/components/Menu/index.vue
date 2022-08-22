@@ -1,18 +1,14 @@
 <template lang="pug">
 .menu
-  .title.p-2 菜單
+  h3.title.p-2.pb-0 菜單
   .tabs.d-flex.nav.nav-pills.p-2.pt-0
     .tab.p-1.nav-link.me-2(
-      :class="{ active: activeTabId === item.id }"
-      v-for='item in showMenuTypes'
+      v-for='(item, index) in showMenuTypes'
+      :class="{ active: currentTabIndex === index }"
       :key="item.id"
-      @click="onActiveTab(item)"
+      @click="onActiveTab(index)"
     ) {{ item.name }}
-  ItemsView(
-    :isShowTab="isShowTab"
-    :showMenuTypes="showMenuTypes" 
-    :activeTabId="activeTabId"
-  )
+  ItemsView(:showMenuTypes="showMenuTypes")
 </template>
 
 <script>
@@ -22,24 +18,21 @@ export default {
 </script>
 
 <script setup>
-import { ref } from 'vue'
 import ItemsView from './ItemsView.vue'
+import { useMenuStore } from '@/stores/menu';
+import { storeToRefs } from 'pinia';
 const props = defineProps({
   showMenuTypes: {
     type: Array,
     default: () => [
     ]
-  },
-  items: {
-    type: Array,
-    default: () => []
   }
 })
-const activeTabId = ref(1)
-const isShowTab = ref(false)
-const onActiveTab = (item) => {
-  activeTabId.value = item.id
-  isShowTab.value = true
+const menuStore = useMenuStore()
+const { currentTabIndex } = storeToRefs(menuStore)
+const onActiveTab = (index) => {
+  currentTabIndex.value = index
+  menuStore.scrollToShow()
 }
 </script>
 <style lang="sass">
