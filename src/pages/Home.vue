@@ -4,17 +4,17 @@ ShopInfo(v-bind="shop", :nowState="nowState")
 Menu(
   :showMenuTypes="showMenuTypes"
 )
-.action-box.position-sticky.bottom-0.p-3.bg-light
-  button.btn.btn-primary.w-100.btn-order(
-    v-if="cartItemLen === 0"
-    @click="menuStore.scrollToShow('menu')"
-  ) 開始點餐
-  .d-flex.justify-content-between(v-else)
-    .price-box
-      .label 商品總金額
-      .price.fw-bolder ${{ cartTotalMoney }}
-    button.btn.btn-primary(@click="$router.push({ name: 'ConfirmOrder' })") 確認餐點
-      .badge.text-bg-light.ms-1 {{ cartItemLen }}
+//- .action-box.position-sticky.bottom-0.p-3.bg-light
+//-   button.btn.btn-primary.w-100.btn-order(
+//-     v-if="cartItemLen === 0"
+//-     @click="menuStore.scrollToShow('menu')"
+//-   ) 開始點餐
+//-   .d-flex.justify-content-between(v-else)
+//-     .price-box
+//-       .label 商品總金額
+//-       .price.fw-bolder ${{ cartTotalMoney }}
+//-     button.btn.btn-primary(@click="$router.push({ name: 'ConfirmOrder' })") 確認餐點
+//-       .badge.text-bg-light.ms-1 {{ cartItemLen }}
 </template>
 
 <script setup>
@@ -31,10 +31,8 @@ import Menu from '@/components/Menu/index.vue'
 
 const shopStore = useShopStore()
 const menuStore = useMenuStore()
-const orderStore = useOrderStore()
 const { shop, nowState } = storeToRefs(shopStore)
 const { showMenuTypes } = storeToRefs(menuStore)
-const { cartItemLen, cartTotalMoney } = storeToRefs(orderStore)
 // const lineUserData = reactive({
 //   message: '',
 //   error: '',

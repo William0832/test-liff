@@ -1,31 +1,32 @@
 <template lang="pug">
 .container.p-0.position-relative.h-100.d-flex.flex-column
   router-view
-  //- ImgWall(:imgs="shop.imgs")
-  //- ShopInfo(v-bind="shop", :nowState="nowState")
-  //- Menu(
-  //-   :showMenuTypes="showMenuTypes"
-  //-   :items="items"
-  //- )
-  //- .action-box.position-sticky.bottom-0.p-3
-  //-   button.btn.btn-primary.w-100.btn-order 開始點餐
+  .action-box.position-sticky.bottom-0.p-3.bg-light
+    button.btn.btn-primary.w-100(v-if="$route.name === 'MenuItem'") 加入購物車
+    button.btn.btn-primary.w-100.btn-order(
+      v-else-if="cartItemLen === 0"
+      @click="menuStore.scrollToShow('menu')"
+    ) 開始點餐
+    .d-flex.justify-content-between(v-else)
+      .price-box
+        .label 商品總金額
+        .price.fw-bolder ${{ cartTotalMoney }}
+      button.btn.btn-primary(@click="$router.push({ name: 'ConfirmOrder' })") 確認餐點
+        .badge.text-bg-light.ms-1 {{ cartItemLen }}
 </template>
 
 <script setup>
-// import { storeToRefs } from 'pinia'
-import { onMounted, reactive } from 'vue'
 import liff from '@line/liff'
-// import { useShopStore } from './stores/shop'
-// import { useMenuStore } from './stores/menu'
-// import ShopInfo from './components/ShopInfo.vue'
-// import ImgWall from './components/ImgWall.vue'
-// import Menu from './components/Menu/index.vue'
 
-// const shopStore = useShopStore()
-// const menuStore = useMenuStore()
+import { storeToRefs } from 'pinia'
+import { onMounted, reactive } from 'vue'
+import { useMenuStore } from '@/stores/menu'
+import { useOrderStore } from '@/stores/order'
 
-// const { shop, nowState } = storeToRefs(shopStore)
-// const { showMenuTypes, items } = storeToRefs(menuStore)
+const menuStore = useMenuStore()
+const orderStore = useOrderStore()
+const { cartItemLen, cartTotalMoney } = storeToRefs(orderStore)
+
 const lineUserData = reactive({
   message: '',
   error: '',
