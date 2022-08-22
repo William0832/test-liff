@@ -6,7 +6,7 @@ Menu(
   :items="items"
 )
 .action-box.position-sticky.bottom-0.p-3
-  button.btn.btn-primary.w-100.btn-order 開始點餐
+  button.btn.btn-primary.w-100.btn-order(@click="orderStore.menuScrollToShow()") 開始點餐
 </template>
 
 <script setup>
@@ -15,13 +15,15 @@ import { onMounted, reactive } from 'vue'
 // import liff from '@line/liff'
 import { useShopStore } from '@/stores/shop'
 import { useMenuStore } from '@/stores/menu'
+import { useOrderStore } from '@/stores/order'
+
 import ShopInfo from '@/components/ShopInfo.vue'
 import ImgWall from '@/components/ImgWall.vue'
 import Menu from '@/components/Menu/index.vue'
 
 const shopStore = useShopStore()
 const menuStore = useMenuStore()
-
+const orderStore = useOrderStore()
 const { shop, nowState } = storeToRefs(shopStore)
 const { showMenuTypes, items } = storeToRefs(menuStore)
 // const lineUserData = reactive({

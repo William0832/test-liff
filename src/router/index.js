@@ -6,11 +6,11 @@ const routes = [
     name: 'Home',
     component: Home,
   },
-  // {
-  //   path: '/about',
-  //   name: 'frontDesk',
-  //   component: () => import('@/components/About.vue'),
-  // }
+  {
+    path: '/menuItem/:id',
+    name: 'MenuItem',
+    component: () => import('@/pages/MenuItem.vue'),
+  }
 ];
 const router = createRouter({
   history: createWebHashHistory(),

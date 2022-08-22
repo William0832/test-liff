@@ -1,12 +1,18 @@
 <template lang="pug">
 .menu
   .title.p-2 菜單
-  .tabs.d-flex
-    .tab.p-2(
-      v-for='type in showMenuTypes'
-      :key="type.id"
-    ) {{ type.name }}
-  ItemsView(:showMenuTypes="showMenuTypes")
+  .tabs.d-flex.nav.nav-pills.p-2.pt-0
+    .tab.p-1.nav-link.me-2(
+      :class="{ active: activeTabId === item.id }"
+      v-for='item in showMenuTypes'
+      :key="item.id"
+      @click="onActiveTab(item)"
+    ) {{ item.name }}
+  ItemsView(
+    :isShowTab="isShowTab"
+    :showMenuTypes="showMenuTypes" 
+    :activeTabId="activeTabId"
+  )
 </template>
 
 <script>
@@ -16,6 +22,7 @@ export default {
 </script>
 
 <script setup>
+import { ref } from 'vue'
 import ItemsView from './ItemsView.vue'
 const props = defineProps({
   showMenuTypes: {
@@ -28,9 +35,18 @@ const props = defineProps({
     default: () => []
   }
 })
+const activeTabId = ref(1)
+const isShowTab = ref(false)
+const onActiveTab = (item) => {
+  activeTabId.value = item.id
+  isShowTab.value = true
+}
 </script>
 <style lang="sass">
 .menu
   flex: 1
-  background-color: rgba(red,0.3)
+  border-block-start: 1px solid
+.tabs
+  border-block-end: 1px solid
+
 </style>
