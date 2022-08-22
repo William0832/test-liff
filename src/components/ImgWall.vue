@@ -14,7 +14,6 @@ const props = defineProps({
 <style lang="sass">
 .img-wall
   height: 250px
-  background-color: rgba(blue,0.4)
   img
     width: 100%
     height: 100%

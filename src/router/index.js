@@ -10,6 +10,11 @@ const routes = [
     path: '/menuItem/:id',
     name: 'MenuItem',
     component: () => import('@/pages/MenuItem.vue'),
+  },
+  {
+    path: '/confirmOrder',
+    name: 'ConfirmOrder',
+    component: () => import('@/pages/ConfirmOrder.vue'),
   }
 ];
 const router = createRouter({
