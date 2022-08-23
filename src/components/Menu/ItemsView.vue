@@ -5,7 +5,7 @@
     :key="menuType.id"
     :ref="el => { itemEls[i] = el }"
   )
-    h5.tab-name.p-2.pb-1.border-bottom {{ menuType.name }}
+    h5.mt-1.p-2.pb-1.border-bottom {{ menuType.name }}
     ItemCard(
       v-for="item in menuType.items" 
       :key="item.id" 

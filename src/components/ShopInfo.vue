@@ -1,31 +1,3 @@
-<script setup>
-import { computed } from 'vue'
-const props = defineProps({
-  name: {
-    type: String
-  },
-  info: {
-    type: String
-  },
-  phone: {
-    type: String
-  },
-  address: {
-    type: String
-  },
-  address: {
-    type: String
-  },
-  activeTime: {
-    type: Array
-  },
-  nowState: {
-    type: String
-  },
-})
-const nowDayNum = new Date().getDay()
-const isOpen = computed((state) => (state) => (state || props.nowState) !== '休息中')
-</script>
 <template lang="pug">
 .shop-info.p-3
   .title.mb-1.h3  {{ name }}
@@ -58,10 +30,41 @@ const isOpen = computed((state) => (state) => (state || props.nowState) !== '休
         :class="{ active: e.dayId === nowDayNum }"
       )
         .week  {{ e.dayName }}
-        .state.text-secondary(:class="{ 'text-success': isOpen(e.activeTime) }") {{ e.activeTime }}
-
-
+        .state.text-secondary(
+          :class="{ 'text-success': isOpen(e.activeTime) }"
+        ) {{ e.activeTime }}
 </template>
+
+<script setup>
+import { computed } from 'vue'
+const props = defineProps({
+  name: {
+    type: String
+  },
+  info: {
+    type: String
+  },
+  phone: {
+    type: String
+  },
+  address: {
+    type: String
+  },
+  address: {
+    type: String
+  },
+  activeTime: {
+    type: Array
+  },
+  nowState: {
+    type: String
+  },
+})
+const nowDayNum = new Date().getDay()
+const isOpen = computed((state) => (state) => (state || props.nowState) !== '休息中')
+
+</script>
+
 <style lang="sass">
 li.active 
   font-weight: bolder

@@ -1,8 +1,8 @@
 <template lang="pug">
-.border-bottom.row.w-100.m-0.p-2
+.border-bottom.row.w-100.m-0.p-2.item
   .col-7.d-block
-    .title.p-1 {{ name }}
-    .price.p-1 ${{ price }}
+    .p-1.fw-semibold {{ name }}
+    .p-1.fw-semibold ${{ price }}
   .col.d-flex.align-items-center.justify-content-end
     img.img-fluid.rounded(src="https://fakeimg.pl/200/", alt="", srcset="")
 </template>
@@ -18,4 +18,6 @@ const props = defineProps({
 })
 </script>
 <style lang="sass">
+.item
+  cursor: pointer
 </style>
