@@ -10,13 +10,13 @@ Menu(
 import { storeToRefs } from 'pinia'
 import { onMounted, reactive } from 'vue'
 // import liff from '@line/liff'
-import { useShopStore } from '../stores/shop'
-import { useMenuStore } from '../stores/menu'
-import { useOrderStore } from '../stores/order'
+import { useShopStore } from '@/stores/shop'
+import { useMenuStore } from '@/stores/menu'
+import { useOrderStore } from '@/stores/order'
 
-import ShopInfo from '../components/ShopInfo.vue'
-import ImgWall from '../components/ImgWall.vue'
-import Menu from '../components/Menu/index.vue'
+import ShopInfo from '@/components/ShopInfo.vue'
+import ImgWall from '@/components/ImgWall.vue'
+import Menu from '@/components/Menu/index.vue'
 
 const shopStore = useShopStore()
 const menuStore = useMenuStore()

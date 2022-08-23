@@ -7,8 +7,9 @@ export default defineConfig({
   plugins: [vue()],
   server: {
     host: '0.0.0.0'
+  },
+  base: './',
+  resolve: {
+    alias: { '@/': `${path.resolve(__dirname, 'src')}/` }
   }
-  // resolve: {
-  //   alias: { '@/': `${path.resolve(__dirname, 'src')}/` }
-  // }
 });

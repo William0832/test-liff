@@ -62,9 +62,9 @@
 
 <script setup>
 import dayjs from 'dayjs'
-import TopToHome from '../components/TopToHome.vue'
+import TopToHome from '@/components/TopToHome.vue'
 import { computed } from 'vue'
-import { useOrderStore } from '../stores/order'
+import { useOrderStore } from '@/stores/order'
 import { storeToRefs } from 'pinia';
 
 const orderStore = useOrderStore()
