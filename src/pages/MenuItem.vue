@@ -105,7 +105,7 @@ const totalPrice = computed(() => {
 const onSubmit = () => {
   const beUpdatedOrder = { ...order, totalPrice: totalPrice.value, price: item.price }
   orderStore.addToCart(beUpdatedOrder)
-  router.push({ name: 'ConfirmOrder' })
+  router.push({ name: 'Home' })
 }
 </script>
 

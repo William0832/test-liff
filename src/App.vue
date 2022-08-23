@@ -10,8 +10,8 @@
     ) 開始點餐
     .d-flex.justify-content-between(v-else)
       .price-box
-        .label 商品總金額
-        .price.fw-bolder ${{ cartTotalMoney }}
+        .label 總金額
+        .price.fw-bolder.py-1.text-center $ {{ cartTotalMoney }}
       button.btn.btn-primary(@click="$router.push({ name: 'ConfirmOrder' })") 確認餐點
         .badge.text-bg-light.ms-1 {{ cartItemLen }}
 </template>
