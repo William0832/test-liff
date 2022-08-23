@@ -1,5 +1,5 @@
 import { createRouter, createWebHashHistory } from 'vue-router';
-import Home from '@/pages/Home.vue'
+import Home from '../pages/Home.vue'
 const routes = [
   {
     path: '/',
@@ -9,12 +9,12 @@ const routes = [
   {
     path: '/menuItem/:typeId/:itemId',
     name: 'MenuItem',
-    component: () => import('@/pages/MenuItem.vue'),
+    component: () => import('../pages/MenuItem.vue'),
   },
   {
     path: '/confirmOrder',
     name: 'ConfirmOrder',
-    component: () => import('@/pages/ConfirmOrder.vue'),
+    component: () => import('../pages/ConfirmOrder.vue'),
   }
 ];
 const router = createRouter({

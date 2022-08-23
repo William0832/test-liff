@@ -54,10 +54,10 @@
 <script setup>
 import { computed, reactive, toRefs } from 'vue'
 import { useRoute } from 'vue-router'
-import { useMenuStore } from '@/stores/menu'
+import { useMenuStore } from '../stores/menu'
 import { useRouter } from 'vue-router'
-import { useOrderStore } from '@/stores/order'
-import TopToHome from '@/components/TopToHome.vue'
+import { useOrderStore } from '../stores/order'
+import TopToHome from '../components/TopToHome.vue'
 
 const orderStore = useOrderStore()
 const menuStore = useMenuStore()

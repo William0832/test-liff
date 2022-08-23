@@ -7,7 +7,7 @@
 <script setup>
 // import liff from '@line/liff'
 // import { onMounted, reactive } from 'vue'
-import Footer from '@/components/Footer.vue'
+import Footer from './components/Footer.vue'
 
 // const lineUserData = reactive({
 //   message: '',

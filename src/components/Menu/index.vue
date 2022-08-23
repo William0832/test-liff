@@ -19,7 +19,7 @@ export default {
 
 <script setup>
 import ItemsView from './ItemsView.vue'
-import { useMenuStore } from '@/stores/menu';
+import { useMenuStore } from '../../stores/menu'
 import { storeToRefs } from 'pinia';
 const props = defineProps({
   showMenuTypes: {

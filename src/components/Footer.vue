@@ -27,10 +27,9 @@
 
 import { storeToRefs } from 'pinia'
 import { onMounted, reactive, computed } from 'vue'
-import { useMenuStore } from '@/stores/menu'
-import { useOrderStore } from '@/stores/order'
+import { useMenuStore } from '../stores/menu'
+import { useOrderStore } from '../stores/order'
 import { useRoute, useRouter } from 'vue-router'
-
 const route = useRoute()
 const router = useRouter()
 const isConfirmOrder = computed(() => route.name === 'ConfirmOrder')

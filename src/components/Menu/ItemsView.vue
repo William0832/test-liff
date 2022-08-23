@@ -16,7 +16,7 @@
 
 <script setup>
 import { ref, computed, onBeforeUpdate, onMounted } from 'vue'
-import { useMenuStore } from '@/stores/menu';
+import { useMenuStore } from '../../stores/menu';
 import ItemCard from './ItemCard.vue'
 const menuStore = useMenuStore()
 const props = defineProps({
