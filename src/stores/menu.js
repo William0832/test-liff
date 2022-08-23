@@ -1,5 +1,5 @@
 import { defineStore } from 'pinia'
-
+import { useOrderStore } from './order'
 export const useMenuStore = defineStore('menu', {
   state: () => ({
     type: [{
@@ -48,6 +48,20 @@ export const useMenuStore = defineStore('menu', {
     }
   }),
   getters: {
+    getPrice() {
+      const DRINK_DISCOUNT = 10
+      const orderStore = useOrderStore()
+      const isHasMainCourse = orderStore.isHasMainCourse
+      return ({ type, price }) => {
+        if (type === '主餐') return price
+        if (type === '飲料') {
+          price = isHasMainCourse ? price - DRINK_DISCOUNT : price
+          return price > 0 ? price : 0
+        }
+        console.warn({ type, price })
+        return price
+      }
+    },
     showItem: (state) => (typeId, itemId) => {
       const type = state.type.find(e => e.id === typeId)
       if (!type) return null

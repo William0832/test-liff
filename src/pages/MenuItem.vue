@@ -6,7 +6,9 @@
   .item-Info.p-2.row.m-0
     .col-7
       h4.title.fw-semibold {{ item.name }}
-      .price.fw-semibold ${{ item.price }}
+      .price-box.d-flex
+        h5.price.fw-semibold(:class="removePriceClass") ${{ item.price }}
+        h4.price.ms-1.fw-semibold(:class="discountPriceClass") ${{ finalPrice }}
       .info {{ item.info }}
     .col.d-flex.align-items-center
       img.w-100.rounded(src="https://fakeimg.pl/200/")
@@ -56,23 +58,35 @@ import { computed, reactive, toRefs } from 'vue'
 import { useRoute } from 'vue-router'
 import { useMenuStore } from '@/stores/menu'
 import { useRouter } from 'vue-router'
-import { useOrderStore } from '@/stores/order';
-const router = useRouter()
+import { useOrderStore } from '@/stores/order'
+
 const orderStore = useOrderStore()
 const menuStore = useMenuStore()
+const router = useRouter()
 const route = useRoute()
 const typeId = computed(() => +route.params?.typeId)
 const itemId = computed(() => +route.params?.itemId)
-
 const item = menuStore.showItem(+typeId.value, +itemId.value)
 const spicyLevels = computed(() => item?.option?.spicyLevels)
 const addItemList = computed(() => item?.option?.addItems)
 const { id, name, type, price } = item
+
+const finalPrice = menuStore.getPrice({ type, price })
+const hasDiscount = computed(() => finalPrice !== item.price)
+const removePriceClass = computed(() => ({
+  'text-decoration-line-through': hasDiscount.value,
+  'text-secondary': hasDiscount.value
+}))
+const discountPriceClass = computed(() => ({
+  'd-none': !hasDiscount.value,
+  'text-success': hasDiscount.value
+}))
+
 const order = reactive({
   id,
   name,
   type,
-  price,
+  price: finalPrice,
   amount: 1,
   special: '',
   option: item.option ? {
@@ -86,11 +100,11 @@ const addAmount = (amount) => {
 }
 const totalPrice = computed(() => {
   const addItemTotalPrice = order?.option?.addItems.reduce((sum, curr) => sum + +curr.price, 0) || 0
-  const price = item.price + addItemTotalPrice
+  const price = finalPrice + addItemTotalPrice
   return order.amount * price
 })
 const onSubmit = () => {
-  const beUpdatedOrder = { ...order, totalPrice: totalPrice.value }
+  const beUpdatedOrder = { ...order, totalPrice: totalPrice.value, price: item.price }
   orderStore.addToCart(beUpdatedOrder)
   router.push({ name: 'ConfirmOrder' })
 }
