@@ -20,7 +20,7 @@
       input.form-control(type="date" v-model="bookingDate")
     .ms-1.text-danger 說明: 我們一般只在週末中午營業, 預定完成後請在與店家確認, 謝謝您！
 
-  .user-info.row.p-2
+  .user-info.row.p-2.m-0
     .col
       label.form-label(for="customer-name") 顧客姓名
       input.form-control#customer-name(type="text" v-model="order.customer.name")
@@ -28,7 +28,7 @@
       label.form-label(for="customer-phone") 電話
       input.form-control#customer-phone(type="tel" v-model="order.customer.phone")
 
-  .special-box.mt-1.p-2
+  .special-box.mt-1.px-4.py-2
     label.form-label(for="special") 特殊需求
     textarea.form-control#special(v-model="cart.special")
 
