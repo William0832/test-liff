@@ -1,32 +1,13 @@
 <template lang="pug">
 .container-fluid.position-relative.d-flex.flex-column.p-0.h-100
   router-view
-  .action-box.position-sticky.bottom-0.p-3.bg-light(
-    v-if="$route.name !== 'MenuItem'"
-  )
-    button.btn.btn-primary.w-100.btn-order(
-      v-if="cartItemLen === 0"
-      @click="menuStore.scrollToShow('menu')"
-    ) 開始點餐
-    .d-flex.justify-content-between(v-else)
-      .price-box
-        .label 總金額
-        .price.fw-bolder.py-1.text-center $ {{ cartTotalMoney }}
-      button.btn.btn-primary(@click="$router.push({ name: 'ConfirmOrder' })") 確認餐點
-        .badge.text-bg-light.ms-1 {{ cartItemLen }}
+  Footer
 </template>
 
 <script setup>
 import liff from '@line/liff'
-
-import { storeToRefs } from 'pinia'
 import { onMounted, reactive } from 'vue'
-import { useMenuStore } from '@/stores/menu'
-import { useOrderStore } from '@/stores/order'
-
-const menuStore = useMenuStore()
-const orderStore = useOrderStore()
-const { cartItemLen, cartTotalMoney } = storeToRefs(orderStore)
+import Footer from '@/components/Footer.vue'
 
 const lineUserData = reactive({
   message: '',
