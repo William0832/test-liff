@@ -1,4 +1,5 @@
 <script setup>
+import { computed } from 'vue'
 const props = defineProps({
   name: {
     type: String
@@ -15,9 +16,6 @@ const props = defineProps({
   address: {
     type: String
   },
-  // isOpen: {
-  //   type: Boolean
-  // },
   activeTime: {
     type: Array
   },
@@ -26,6 +24,7 @@ const props = defineProps({
   },
 })
 const nowDayNum = new Date().getDay()
+const isOpen = computed((state) => (state) => (state || props.nowState) !== '休息中')
 </script>
 <template lang="pug">
 .shop-info.p-3
@@ -41,7 +40,7 @@ const nowDayNum = new Date().getDay()
     .start.d-flex.align-items-center
       icon(:icon="['far', 'fa-clock']").pe-3
       .value 營業時間 
-    .end.d-flex.align-items-center
+    .end.d-flex.align-items-center.text-secondary(:class="{ 'text-success': isOpen(nowState) }")
       .value.pe-2 {{ nowState }}
       i.icon-angle(
         type="button", 
@@ -56,14 +55,18 @@ const nowDayNum = new Date().getDay()
       li.list-group-item.d-flex.justify-content-between(
         v-for="e in activeTime" 
         :key="e.dayId"
-        :class="{ active: e.dayId === nowDayNum, disabled: nowState !== '休息中' }"
+        :class="{ active: e.dayId === nowDayNum }"
       )
         .week  {{ e.dayName }}
-        .state {{ e.activeTime }}
+        .state.text-secondary(:class="{ 'text-success': isOpen(e.activeTime) }") {{ e.activeTime }}
 
 
 </template>
 <style lang="sass">
+li.active 
+  font-weight: bolder
+  .state 
+    color: white !important
 .icon-angle
   transition: -10s
   // transform: rotate(90)

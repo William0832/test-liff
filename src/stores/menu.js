@@ -48,12 +48,28 @@ export const useMenuStore = defineStore('menu', {
     }
   }),
   getters: {
+    showItem: (state) => (typeId, itemId) => {
+      const type = state.type.find(e => e.id === typeId)
+      if (!type) return null
+      const { items, option } = type
+      const item = items.find(e => e.id === itemId)
+      if (!item) return null
+      return {
+        type: type?.name,
+        ...item,
+        itemId: item?.id,
+        option
+      }
+    },
     showMenuTypes: (state) => state.type?.filter(e => e.isShowOnTabs),
     menuItemEl: (state) => state.scrollEls.items.length !== 0
       ? state.scrollEls.items[state.currentTabIndex]
       : null
   },
   actions: {
+    fetchItem({ typeId, itemId }) {
+      console.log(typeId, itemId)
+    },
     registerEl(type, el) {
       this.scrollEls[type] = el
     },

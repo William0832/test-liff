@@ -5,8 +5,13 @@
     :key="menuType.id"
     :ref="el => { itemEls[i] = el }"
   )
-    h5.tab-name.p-2.pb-0.mb-0 {{ menuType.name }}
-    ItemCard(v-for="item in menuType.items" :key="item.id" v-bind="item")
+    h5.tab-name.p-2.pb-1.border-bottom {{ menuType.name }}
+    ItemCard(
+      v-for="item in menuType.items" 
+      :key="item.id" 
+      v-bind="item"
+        @click="$router.push({ name: 'MenuItem', params: { typeId: menuType.id, itemId: item.id } })"
+    )
 </template>
 
 <script setup>
@@ -20,7 +25,16 @@ const props = defineProps({
     default: () => []
   }
 })
-
+const maxHeight = computed(() => {
+  let removeHeight = 0
+  if (document.body.clientHeight >= 667) removeHeight = 148
+  if (document.body.clientHeight >= 740) removeHeight = 148
+  if (document.body.clientHeight >= 844) removeHeight = 155
+  if (document.body.clientHeight >= 915) removeHeight = 155
+  if (document.body.clientHeight >= 1024) removeHeight = 155
+  if (document.body.clientHeight >= 1180) removeHeight = 160
+  return `${document.body.clientHeight - removeHeight}px`
+})
 const tabView = ref(null)
 const itemEls = ref([])
 menuStore.registerEl('menu', tabView)
@@ -49,8 +63,7 @@ onBeforeUpdate(() => {
 })
 </script>
 <style lang="sass">
-.tab
-  &-view
-    max-height: 350px
-    overflow: auto
+.tab-view
+  max-height: v-bind(maxHeight)
+  overflow: auto
 </style>

@@ -1,12 +1,10 @@
 <template lang="pug">
-.menu-item.d-flex.justify-content-between.border-bottom(
-  @click="$router.push({ name: 'MenuItem', params: { id } })"
-)
-  .start.d-block.m-2
+.border-bottom.row.w-100.m-0.p-2
+  .col-7.d-block
     .title.p-1 {{ name }}
     .price.p-1 ${{ price }}
-  .end.d-flex.align-items-center.m-2
-    img(src="https://fakeimg.pl/100/", alt="", srcset="")
+  .col.d-flex.align-items-center.justify-content-end
+    img.img-fluid.rounded(src="https://fakeimg.pl/200/", alt="", srcset="")
 </template>
 
 <script setup>
@@ -20,6 +18,4 @@ const props = defineProps({
 })
 </script>
 <style lang="sass">
-.menu-item
-  height: 50%
 </style>

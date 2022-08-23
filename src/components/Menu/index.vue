@@ -1,7 +1,7 @@
 <template lang="pug">
-.menu
+.menu.border-top.border-secondary
   h3.title.p-2.pb-0 菜單
-  .tabs.d-flex.nav.nav-pills.p-2.pt-0
+  .tabs.d-flex.nav.nav-pills.p-2.pt-0.border-bottom.border-secondary
     .tab.p-1.nav-link.me-2(
       v-for='(item, index) in showMenuTypes'
       :class="{ active: currentTabIndex === index }"
@@ -38,8 +38,4 @@ const onActiveTab = (index) => {
 <style lang="sass">
 .menu
   flex: 1
-  border-block-start: 1px solid
-.tabs
-  border-block-end: 1px solid
-
 </style>

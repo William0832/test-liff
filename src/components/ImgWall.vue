@@ -1,6 +1,6 @@
 <template lang="pug">
 .img-wall
-  img(:src="imgs[0]", alt="")
+  img.img-fluid(:src="imgs[0]", alt="")
 </template>
 
 <script setup>

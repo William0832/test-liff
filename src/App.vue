@@ -1,10 +1,11 @@
 <template lang="pug">
-.container.p-0.position-relative.h-100.d-flex.flex-column
+.container-fluid.position-relative.d-flex.flex-column.p-0.h-100
   router-view
-  .action-box.position-sticky.bottom-0.p-3.bg-light
-    button.btn.btn-primary.w-100(v-if="$route.name === 'MenuItem'") 加入購物車
+  .action-box.position-sticky.bottom-0.p-3.bg-light(
+    v-if="$route.name !== 'MenuItem'"
+  )
     button.btn.btn-primary.w-100.btn-order(
-      v-else-if="cartItemLen === 0"
+      v-if="cartItemLen === 0"
       @click="menuStore.scrollToShow('menu')"
     ) 開始點餐
     .d-flex.justify-content-between(v-else)
@@ -57,15 +58,19 @@ onMounted(async () => {
 
 <style lang="sass">
 html, body
+  min-width: 375px
   width: 100%
   height: 100%
   padding: 0
   margin: 0
-#app 
+#app
+  box-shadow: 0 0 50px 10px rgba(black,0.1)
+  background-color: white
+  margin-inline: auto
+  max-width: 600px
   font-family: Avenir, Helvetica, Arial, sans-serif
   -webkit-font-smoothing: antialiased
   -moz-osx-font-smoothing: grayscale
   height: 100vh
-
-
+  overflow: auto
 </style>
