@@ -5,36 +5,36 @@
 </template>
 
 <script setup>
-import liff from '@line/liff'
-import { onMounted, reactive } from 'vue'
+// import liff from '@line/liff'
+// import { onMounted, reactive } from 'vue'
 import Footer from '@/components/Footer.vue'
 
-const lineUserData = reactive({
-  message: '',
-  error: '',
-  isLogin: false
-})
+// const lineUserData = reactive({
+//   message: '',
+//   error: '',
+//   isLogin: false
+// })
 
-onMounted(async () => {
-  try {
-    await liff.init({
-      liffId: import.meta.env.VITE_LIFF_ID,
-      withLoginOnExternalBrowser: false
-    })
-    lineUserData.isLogin = liff.isLoggedIn()
-    lineUserData.message = 'LIFF init succeeded.'
-  } catch (err) {
-    lineUserData.message = 'LIFF init failed.'
-    lineUserData.error = `${err}`
-  }
-  // try {
-  //   const res = await gApi.login()
-  //   console.log(res)
-  // } catch (err) {
-  //   console.error(err)
-  //   module.error = `${err.details}`
-  // }
-})
+// onMounted(async () => {
+//   try {
+//     await liff.init({
+//       liffId: import.meta.env.VITE_LIFF_ID,
+//       withLoginOnExternalBrowser: false
+//     })
+//     lineUserData.isLogin = liff.isLoggedIn()
+//     lineUserData.message = 'LIFF init succeeded.'
+//   } catch (err) {
+//     lineUserData.message = 'LIFF init failed.'
+//     lineUserData.error = `${err}`
+//   }
+//   // try {
+//   //   const res = await gApi.login()
+//   //   console.log(res)
+//   // } catch (err) {
+//   //   console.error(err)
+//   //   module.error = `${err.details}`
+//   // }
+// })
 </script>
 
 <style lang="sass">
