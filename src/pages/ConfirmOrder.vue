@@ -1,6 +1,9 @@
 <template lang="pug">
-.container.mt-2
-  .top-action
-    button.btn.btn-secondary.btn-sm(@click="$router.push({ name: 'Home' })") 返回
+.p-2.pt-3.h-100
+  TopToHome
   h3.mt-2 確認餐點
 </template>
+
+<script setup>
+import TopToHome from '@/components/TopToHome.vue'
+</script>

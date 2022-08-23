@@ -1,8 +1,6 @@
 <template lang="pug">
 .p-2.pt-3.h-100
-  .position-absolute.top-0.end-0.opacity-50.ms-1
-    span.btn.badge.rounded-pill.text-bg-dark(@click="$router.push({ name: 'Home' })") 
-      icon(:icon="['fas', 'fa-xmark']")
+  TopToHome
   .item-Info.p-2.row.m-0
     .col-7
       h4.title.fw-semibold {{ item.name }}
@@ -59,6 +57,7 @@ import { useRoute } from 'vue-router'
 import { useMenuStore } from '@/stores/menu'
 import { useRouter } from 'vue-router'
 import { useOrderStore } from '@/stores/order'
+import TopToHome from '@/components/TopToHome.vue'
 
 const orderStore = useOrderStore()
 const menuStore = useMenuStore()
