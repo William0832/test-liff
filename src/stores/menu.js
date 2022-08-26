@@ -1,27 +1,31 @@
 import { defineStore } from 'pinia'
 import { useOrderStore } from './order'
+import { useShopStore } from './shop'
+import api from '../api'
+const spicyLevels =  [
+  {
+    id: 1, name: '完全不辣', isDefault: false
+  },
+  {
+    id: 2, name: '微辣(原味)', isDefault: true
+  },
+  {
+    id: 3, name: '加辣', isDefault: false
+  },
+]
 export const useMenuStore = defineStore('menu', {
   state: () => ({
     type: [{
       id: 1,
       name: '主餐',
+      info: '',
       isShowOnTabs: true,
       items: [
         { id: 1, typeId: 1, name: '蔬食炒泡麵', price: 120, info: '蔬食炒泡麵', isSaleOut: false, img: '' },
         { id: 2, typeId: 1, name: '蔬食香腸炒泡麵', price: 150, info: '蔬食香腸炒泡麵', isSaleOut: false, img: '' },
       ],
       option: {
-        spicyLevels: [
-          {
-            id: 1, name: '完全不辣', isDefault: false
-          },
-          {
-            id: 2, name: '微辣(原味)', isDefault: true
-          },
-          {
-            id: 3, name: '加辣', isDefault: false
-          },
-        ],
+        spicyLevels,
         addItems: [
           { id: 1, name: '加麵', price: 20, info: '加麵', isSaleOut: false, img: '' },
           { id: 2, name: '韓式泡菜', price: 20, info: '韓式泡菜', isSaleOut: false, img: '' },
@@ -33,6 +37,7 @@ export const useMenuStore = defineStore('menu', {
     }, {
       id: 2,
       name: '飲料',
+      info: '',
       isShowOnTabs: true,
       items: [
         { id: 3, typeId: 2, name: '檸檬可樂', price: 50, info: '檸檬可樂', isSaleOut: false, img: '' },
@@ -41,6 +46,7 @@ export const useMenuStore = defineStore('menu', {
         { id: 6, typeId: 2, name: '啤酒', price: 60, info: '啤酒', isSaleOut: false, img: '' },
       ]
     }],
+    addItems: [],
     currentTabIndex: 0,
     scrollEls: {
       menu: null,
@@ -81,6 +87,43 @@ export const useMenuStore = defineStore('menu', {
       : null
   },
   actions: {
+    async fetchFoodsByTypes() {
+      const shopId = useShopStore().shop.id
+      const  { foodTypes } = await api(`shops/${shopId}/fetchFoodsByTypes`)
+      console.log(foodTypes) 
+      this.addItems = foodTypes
+        .find(e => e.name === '主餐加點').foods
+        .map( e=> ({
+          id: e.id,
+          name: e.name,
+          info: e.info,
+          price: e.price,
+          isSoldOut: e.isSoldOut
+        }))
+      this.type = foodTypes
+        .filter( e => e.name !== '主餐加點')
+        .map(e => ({
+          id: e.id,
+          name: e.name,
+          isShowOnTabs: true,
+          info: e.info,
+          option: e.name === '主餐' 
+            ? {
+              spicyLevels,
+              addItems: this.addItems
+            } 
+            : null,
+          items: e.foods.map(e => ({
+            id: e.id,
+            typeId: e.foodTypeId,
+            name: e.name,
+            price: e.price,
+            info: e.info,
+            isSoldOut: e.isSoldOut
+          }))
+        }))
+    },
+
     fetchItem({ typeId, itemId }) {
       console.log(typeId, itemId)
     },

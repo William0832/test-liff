@@ -11,6 +11,7 @@ const checkTimeIsBetweenRange = (startStr, endStr) => {
 export const useShopStore = defineStore('shop', {
   state: () => ({
     shop: {
+      id: 1,
       name: 'Ohiyo 樂屋',
       info: '海邊好吃炒泡麵',
       phone: '0987654321',
@@ -46,13 +47,13 @@ export const useShopStore = defineStore('shop', {
     async fetchShop (id)  {
       const { shop: shopData } = await api(`shops/${id}`, { params: { includeFoods: 'true' }})
       const {
-        name, address,
-        phone, info ,openStatus, 
-        foods, activeSchedule
+        id: shopId, name, address,
+        phone, info ,openStatus, activeSchedule
       } = shopData
        const { weekDayOpenTimes } = activeSchedule
       this.shop = {
         ...this.shop,
+        id: shopId,
         name,
         address,
         phone,
@@ -63,7 +64,6 @@ export const useShopStore = defineStore('shop', {
           activeTime: weekDayOpenTimes.find(item => item.weekDay == e.dayId)?.openTime || '休息中'
         }))
       }
-      console.log(shopData)
     }
   },
 })
