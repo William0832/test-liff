@@ -10,14 +10,16 @@
       v-for="item in menuType.items" 
       :key="item.id" 
       v-bind="item"
-        @click="$router.push({ name: 'MenuItem', params: { typeId: menuType.id, itemId: item.id } })"
+      @click="onSelectFood(item)"
     )
 </template>
 
 <script setup>
+import { useRouter } from 'vue-router'
 import { ref, computed, onBeforeUpdate, onMounted } from 'vue'
 import { useMenuStore } from '@/stores/menu';
 import ItemCard from './ItemCard.vue'
+const router = useRouter()
 const menuStore = useMenuStore()
 const props = defineProps({
   showMenuTypes: {
@@ -47,6 +49,10 @@ const itemElBeforeScrollTopList = computed(() => {
     return sumHeight
   })
 })
+const onSelectFood = item => {
+  if(item.isSoldOut) return
+  router.push({ name: 'MenuItem', params: { foodId: item.id } })
+}
 const handelScroll = (e) => {
   const { scrollTop } = e.target
   let index

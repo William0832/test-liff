@@ -54,4 +54,31 @@ html, body
   -moz-osx-font-smoothing: grayscale
   height: 100vh
   overflow: auto
+.sold-out
+  position: relative
+  cursor: not-allowed
+  &::before
+    content: ''
+    display: block
+    width: 100%
+    height: 100%
+    background-color: white
+    opacity: 0.6
+    z-index: 998
+    position: absolute
+  &::after
+    content: 'SOLD OUT'
+    display: block
+    color: rgba(red, 0.8) 
+    font-style: italic
+    font-weight: bolder
+    font-size: 30px
+    letter-spacing: 2px
+    text-shadow: 1px 2px rgba(red, 0.6) 
+    position: absolute
+    text-align: center
+    top: 50%
+    left: 50%
+    transform: translate(-50%, -50%)
+    z-index: 999
 </style>

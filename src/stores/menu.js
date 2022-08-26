@@ -90,7 +90,6 @@ export const useMenuStore = defineStore('menu', {
     async fetchFoodsByTypes() {
       const shopId = useShopStore().shop.id
       const  { foodTypes } = await api(`shops/${shopId}/fetchFoodsByTypes`)
-      console.log(foodTypes) 
       this.addItems = foodTypes
         .find(e => e.name === '主餐加點').foods
         .map( e=> ({

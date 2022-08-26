@@ -16,7 +16,7 @@ const routes = [
     }
   },
   {
-    path: '/menuItem/:typeId/:itemId',
+    path: '/menuItem/:foodId',
     name: 'MenuItem',
     component: () => import('@/pages/MenuItem.vue'),
   },
