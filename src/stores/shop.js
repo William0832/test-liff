@@ -1,4 +1,6 @@
 import { defineStore } from 'pinia'
+import api from '@/api'
+
 const checkTimeIsBetweenRange = (startStr, endStr) => {
   const now = new Date()
   const start = now.setHours(...startStr.split(':'))
@@ -13,9 +15,9 @@ export const useShopStore = defineStore('shop', {
       info: '海邊好吃炒泡麵',
       phone: '0987654321',
       address: 'address',
-      imgs: ['https://fakeimg.pl/200'],
+      imgs: ['./images/ohiyoMenu.jpg'],
       isRegular: true,
-      isOpen: false,
+      isOpen: false, //changeBy nowState(getter) 
       activeTime: [
         { dayId: 1, dayName: '星期一', activeTime: '休息中' },
         { dayId: 2, dayName: '星期二', activeTime: '休息中' },
@@ -41,5 +43,27 @@ export const useShopStore = defineStore('shop', {
     }
   },
   actions: {
+    async fetchShop (id)  {
+      const { shop: shopData } = await api(`shops/${id}`, { params: { includeFoods: 'true' }})
+      const {
+        name, address,
+        phone, info ,openStatus, 
+        foods, activeSchedule
+      } = shopData
+       const { weekDayOpenTimes } = activeSchedule
+      this.shop = {
+        ...this.shop,
+        name,
+        address,
+        phone,
+        info,
+        isRegular: openStatus === 'bySchedule',
+        activeTime: this.shop.activeTime.map(e => ({
+          ...e,
+          activeTime: weekDayOpenTimes.find(item => item.weekDay == e.dayId)?.openTime || '休息中'
+        }))
+      }
+      console.log(shopData)
+    }
   },
 })
