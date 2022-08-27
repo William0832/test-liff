@@ -19,6 +19,14 @@ const routes = [
     path: '/menuItem/:foodId',
     name: 'MenuItem',
     component: () => import('@/pages/MenuItem.vue'),
+    beforeEnter: async (to, from, next) => {
+      const {foodId} = to.params
+      const food = await useMenuStore().fetchFood(+foodId)
+      if(food?.foodType?.name === '主餐') {
+        await useMenuStore().fetchAddItems()
+      }
+      next()
+    }
   },
   {
     path: '/confirmOrder',

@@ -13,6 +13,7 @@ const spicyLevels =  [
     id: 3, name: '加辣', isDefault: false
   },
 ]
+const getShopId = () => useShopStore().shop.id
 export const useMenuStore = defineStore('menu', {
   state: () => ({
     type: [{
@@ -46,12 +47,14 @@ export const useMenuStore = defineStore('menu', {
         { id: 6, typeId: 2, name: '啤酒', price: 60, info: '啤酒', isSaleOut: false, img: '' },
       ]
     }],
+    showMenuFood: null,
     addItems: [],
     currentTabIndex: 0,
     scrollEls: {
       menu: null,
       items: []
-    }
+    },
+    spicyLevels
   }),
   getters: {
     getPrice() {
@@ -88,7 +91,7 @@ export const useMenuStore = defineStore('menu', {
   },
   actions: {
     async fetchFoodsByTypes() {
-      const shopId = useShopStore().shop.id
+      const shopId = getShopId()
       const  { foodTypes } = await api(`shops/${shopId}/fetchFoodsByTypes`)
       this.addItems = foodTypes
         .find(e => e.name === '主餐加點').foods
@@ -122,9 +125,27 @@ export const useMenuStore = defineStore('menu', {
           }))
         }))
     },
-
-    fetchItem({ typeId, itemId }) {
-      console.log(typeId, itemId)
+    async fetchFood(foodId) {
+      const shopId = getShopId()
+      const { food } = await api(`/shops/${shopId}/foods/${foodId}`)
+      console.log( food )
+      this.showMenuFood = food
+      return food
+    },
+    async fetchAddItems () {
+      const shopId = getShopId()
+      this.addItems = []
+      const { foods } = await api(`/shops/${shopId}/foodTypes/3/foods`)
+      console.log( foods )
+      this.addItems = foods
+        .map( e=> ({
+          id: e.id,
+          name: e.name,
+          info: e.info,
+          price: e.price,
+          isSoldOut: e.isSoldOut
+        }))
+      return foods
     },
     registerEl(type, el) {
       this.scrollEls[type] = el

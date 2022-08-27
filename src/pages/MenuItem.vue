@@ -5,12 +5,13 @@
     .col-7
       h4.title.fw-semibold {{ item.name }}
       .price-box.d-flex
-        h5.price.fw-semibold(:class="removePriceClass") ${{ item.price }}
-        h4.price.ms-1.fw-semibold(:class="discountPriceClass") ${{ finalPrice }}
-      .info {{ item.info }}
+        h5.price.fw-semibold() ${{ item.price }}
+      .infos.text-secondary 
+        .food-type-info {{item.foodType.info }}
+        .food-info {{ item.info }}
     .col.d-flex.align-items-center
       img.w-100.rounded(src="https://fakeimg.pl/200/")
-  .my-1(v-if="spicyLevels")
+  .my-1(v-if="isMain")
     label.form-label.mb-0 辣度
     .form-control
       .form-check(v-for="item in spicyLevels" :key="item.id")
@@ -21,11 +22,21 @@
           :id="`spicy-${item.id}`" 
         )
         label.form-check-label(:for="`spicy-${item.id}`") {{ item.name }}
-  .my-1(v-if="addItemList")
+  .my-1(v-if="isMain")
     label.form-label.mb-0 加料
     .form-control
-      .form-check(v-for="(e, i) in addItemList" :key="e.id" )
+      .form-check(
+        style="--f-size: 5px;"
+        v-for="(e, i) in addItems" 
+        :key="e.id" 
+        :class="{'sold-out': e.isSoldOut}"
+        data-bs-container="body" 
+        data-bs-toggle="popover" d
+        ata-bs-placement="top" 
+        :data-bs-content="e.info"
+      )
         input.form-check-input(
+          :disabled="e.isSoldOut"
           type="checkbox" 
           :id="`add-${i + 1}`" 
           :value="e" 
@@ -33,6 +44,9 @@
         )
         label.form-check-label(:for="`add-${i + 1}`").d-flex {{ e.name }}
           .price.ms-2 ${{ e.price }}
+          //- .info.text-secondary.ms-2 {{e.info}}
+
+
   .my-1
     label.form-label.mb-0 特殊需求
     textarea.form-control(v-model="order.special")
@@ -48,47 +62,33 @@
         icon(:icon="['fas', 'fa-plus']")
   button.btn.btn-primary.w-100.d-flex.justify-content-center.align-items-center(@click="onSubmit") 加入購物車
     h3.pb-0.mb-0
-      span.badge.badge-lg.ms-2.text-bg-light ${{ totalPrice || 0 }}
+      //- span.badge.badge-lg.ms-2.text-bg-light ${{ totalPrice || 0 }}
 </template>
 
 <script setup>
-import { computed, reactive, toRefs } from 'vue'
-import { useRoute } from 'vue-router'
+import { computed, reactive } from 'vue'
 import { useMenuStore } from '@/stores/menu'
 import { useRouter } from 'vue-router'
 import { useOrderStore } from '@/stores/order'
 import TopToHome from '@/components/TopToHome.vue'
+import { storeToRefs } from 'pinia'
 
 const orderStore = useOrderStore()
 const menuStore = useMenuStore()
 const router = useRouter()
-const route = useRoute()
-const typeId = computed(() => +route.params?.typeId)
-const itemId = computed(() => +route.params?.itemId)
-const item = menuStore.showItem(+typeId.value, +itemId.value)
-const spicyLevels = computed(() => item?.option?.spicyLevels)
-const addItemList = computed(() => item?.option?.addItems)
-const { id, name, type, price } = item
-
-const finalPrice = menuStore.getPrice({ type, price })
-const hasDiscount = computed(() => finalPrice !== item.price)
-const removePriceClass = computed(() => ({
-  'text-decoration-line-through': hasDiscount.value,
-  'text-secondary': hasDiscount.value
-}))
-const discountPriceClass = computed(() => ({
-  'd-none': !hasDiscount.value,
-  'text-success': hasDiscount.value
-}))
+const { showMenuFood: item, spicyLevels, addItems } = storeToRefs(menuStore)
+const { id, name, foodType, price } = item.value
+const { name: type } = foodType
+const isMain = computed(() => type === '主餐')
 
 const order = reactive({
   id,
   name,
   type,
-  price: finalPrice,
+  price,
   amount: 1,
   special: '',
-  option: item.option ? {
+  option: addItems.value ? {
     spicyLevel: spicyLevels.value.find(e => e.isDefault).name,
     addItems: []
   } : null
@@ -99,11 +99,11 @@ const addAmount = (amount) => {
 }
 const totalPrice = computed(() => {
   const addItemTotalPrice = order?.option?.addItems.reduce((sum, curr) => sum + +curr.price, 0) || 0
-  const price = finalPrice + addItemTotalPrice
-  return order.amount * price
+  return order.amount * (price + addItemTotalPrice)
 })
 const onSubmit = () => {
   const beUpdatedOrder = { ...order, totalPrice: totalPrice.value, price: item.price }
+  console.log(beUpdatedOrder)
   orderStore.addToCart(beUpdatedOrder)
   router.push({ name: 'Home' })
 }

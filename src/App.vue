@@ -38,6 +38,8 @@ import Footer from './components/Footer.vue'
 </script>
 
 <style lang="sass">
+:root 
+  --f-size: 30px
 html, body
   min-width: 375px
   width: 100%
@@ -72,7 +74,7 @@ html, body
     color: rgba(red, 0.8) 
     font-style: italic
     font-weight: bolder
-    font-size: 30px
+    font-size: var(--f-size, 10px)
     letter-spacing: 2px
     text-shadow: 1px 2px rgba(red, 0.6) 
     position: absolute
