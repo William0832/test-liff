@@ -66,7 +66,7 @@ html, body
     height: 100%
     background-color: white
     opacity: 0.6
-    z-index: 998
+    z-index: 100
     position: absolute
   &::after
     content: 'SOLD OUT'

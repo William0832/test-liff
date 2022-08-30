@@ -45,11 +45,17 @@ const startToOrder = () => {
   }
   menuStore.scrollToShow('menu')
 }
-const submit = () => {
+const submit = async() => {
   if (isConfirmOrder.value) {
     console.log('結帳')
+    orderStore.confirmOrder()
     return
   }
   router.push({ name: 'ConfirmOrder' })
 }
 </script>
+
+<style lang="sass">
+.action-box
+  z-index: 999
+</style>
