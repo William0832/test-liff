@@ -29,6 +29,7 @@ const { showMenuTypes } = storeToRefs(menuStore)
 // })
 
 onMounted(async () => {
+  useOrderStore().readCart()
   // try {
   //   await liff.init({
   //     liffId: import.meta.env.VITE_LIFF_ID,

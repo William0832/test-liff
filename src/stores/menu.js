@@ -1,7 +1,7 @@
 import { defineStore } from 'pinia'
 import { useOrderStore } from './order'
 import { useShopStore } from './shop'
-import api from '../api'
+import api from '@/utils/api'
 const spicyLevels =  [
   {
     id: 1, name: '完全不辣', isDefault: false

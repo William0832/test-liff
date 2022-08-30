@@ -1,5 +1,5 @@
 import { defineStore } from 'pinia'
-import api from '@/api'
+import api from '@/utils/api'
 
 const checkTimeIsBetweenRange = (startStr, endStr) => {
   const now = new Date()

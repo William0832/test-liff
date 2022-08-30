@@ -1,12 +1,23 @@
 import { defineStore } from 'pinia'
 import { v4 as uid } from 'uuid'
+import api from '@/utils/api'
+
+import storage from '@/utils/storage'
+const STORAGE_CART_NAME = 'ohiyo-cart'
+const defaultCart = {
+  items: [],
+  special: '',
+  bookingDate: null,
+  totalPrice: 0,
+}
+
+Object.freeze(defaultCart)
+
+
 export const useOrderStore = defineStore('order', {
   state: () => ({
     cart: {
-      items: [],
-      special: '',
-      bookingDate: null,
-      totalPrice: 0,
+     ...defaultCart
     },
     order: {
       orderId: null,
@@ -40,6 +51,10 @@ export const useOrderStore = defineStore('order', {
     }
   },
   actions: {
+    readCart () {
+      const cart = storage.read(STORAGE_CART_NAME) || { ...defaultCart }
+      if(cart) this.cart = cart
+    },
     removeItem(cartId) {
       if (!cartId) throw new Error('no cartId')
       const item = this.cart.items.find(e => e.cartId === cartId)
@@ -48,6 +63,7 @@ export const useOrderStore = defineStore('order', {
       const oldItemPrice = amount * itemPrice
       this.totalPrice -= - oldItemPrice
       this.cart.items = this.cart.items.filter(e => e.cartId !== cartId)
+      storage.update(STORAGE_CART_NAME, this.cart)
     },
     addItemAmount(cartId, add) {
       if (!cartId) throw new Error('no cartId')
@@ -94,6 +110,17 @@ export const useOrderStore = defineStore('order', {
         spicyLevel: option?.spicyLevel || null,
         special
       })
+      storage.update(STORAGE_CART_NAME, this.cart)
+
+    },
+    async confirmOrder () {
+      const payload = {
+        customer: this.order.customer,
+        cart: this.cart
+      }
+      
+      const res = await api.post('/orders', payload)
+      console.log(res)
     }
   },
 })
