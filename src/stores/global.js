@@ -19,6 +19,9 @@ export const useGlobalStore = defineStore('global', {
   actions: {
     async login(account, psw) {
       this.isAuth = true
+    },
+    logout () {
+      this.isAuth = false
     }
   }
 })

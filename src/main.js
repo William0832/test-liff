@@ -12,14 +12,15 @@ import { library } from '@fortawesome/fontawesome-svg-core'
 /* import font awesome icon component */
 import { FontAwesomeIcon } from '@fortawesome/vue-fontawesome'
 /* import specific icons */
-import { faPhone, faAngleUp, faPlus, faMinus, faXmark, faCalendarDay } from '@fortawesome/free-solid-svg-icons'
+import { faPhone, faAngleUp, faPlus, faMinus, faXmark, faCalendarDay, faBell } from '@fortawesome/free-solid-svg-icons'
 import { faClock as farClock, faMap as farMap } from '@fortawesome/free-regular-svg-icons'
 
 // /* add icons to the library */
 library.add(
   farMap, faPhone, farClock,
   faAngleUp, faPlus, faMinus,
-  faXmark, faCalendarDay
+  faXmark, faCalendarDay,
+  faBell
 )
 
 app.component('icon', FontAwesomeIcon)

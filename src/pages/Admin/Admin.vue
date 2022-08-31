@@ -1,12 +1,12 @@
 <template lang="pug">
 .container-fluid
   h4.mt-2 OHIYO-Admin
+  Navbar     
   router-view
 </template>
 
 <script setup>
-import Login from './components/Login.vue'
-
+import Navbar from './components/Navbar.vue'
 </script>
 
 <style lang="sass" scoped>
