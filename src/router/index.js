@@ -1,7 +1,8 @@
 import { createRouter, createWebHashHistory } from 'vue-router';
 import Home from '@/pages/Home.vue'
-import { useShopStore } from '../stores/shop';
-import { useMenuStore } from '../stores/menu';
+import { useShopStore } from '../stores/shop'
+import { useMenuStore } from '../stores/menu'
+import { useGlobalStore } from '../stores/global'
 const routes = [
   {
     path: '/',
@@ -14,6 +15,27 @@ const routes = [
       ]
       next()
     }
+  }, {
+    path: '/admin',
+    name: 'Admin',
+    component: () => import('@/pages/Admin/Admin.vue'),
+    children: [
+      {
+        path: '',
+        name: 'Login',
+        component: () => import('@/pages/Admin/components/Login.vue')
+      },
+      {
+        path: 'foods',
+        name: 'FoodTable',
+        component: () => import('@/pages/Admin/components/FoodTable.vue')
+      },
+      {
+        path: 'orders',
+        name: 'OrderTable',
+        component: () => import('@/pages/Admin/components/OrderTable.vue')
+      },
+    ]
   },
   {
     path: '/menuItem/:foodId',
@@ -37,5 +59,15 @@ const routes = [
 const router = createRouter({
   history: createWebHashHistory(),
   routes,
-});
+})
+
+router.beforeEach((to, from) => {
+  const globalStore = useGlobalStore()
+  if (to.path.includes('admin')) {
+    if (to.name === 'Login' || globalStore.isAuth) return true
+    return { name: 'Login' }
+  }
+  return true
+})
+
 export default router;

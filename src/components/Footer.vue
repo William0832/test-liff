@@ -1,6 +1,6 @@
 <template lang="pug">
 .action-box.position-sticky.bottom-0.p-3.bg-light(
-  v-if="$route.name !== 'MenuItem'"
+  v-if="showFooter"
 )
   button.btn.btn-primary.w-100.btn-order(
     v-if="cartItemLen === 0"
@@ -38,6 +38,9 @@ const menuStore = useMenuStore()
 const orderStore = useOrderStore()
 const { cartItemLen, cartTotalMoney } = storeToRefs(orderStore)
 
+const showFooter = computed(() => 
+  ['Home', 'ConfirmOrder'].includes(route.name)
+)
 const startToOrder = () => {
   if (isConfirmOrder.value) {
     router.push({ name: 'Home' })
