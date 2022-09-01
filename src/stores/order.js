@@ -61,7 +61,7 @@ export const useOrderStore = defineStore('order', {
       if (!item) throw new Error('no item')
       const { amount, itemPrice } = item
       const oldItemPrice = amount * itemPrice
-      this.totalPrice -= - oldItemPrice
+      this.cart.totalPrice -= oldItemPrice
       this.cart.items = this.cart.items.filter(e => e.cartId !== cartId)
       storage.update(STORAGE_CART_NAME, this.cart)
     },
@@ -73,7 +73,9 @@ export const useOrderStore = defineStore('order', {
       const newAmount = amount + add
       item.amount = newAmount < 1 ? 1 : newAmount
       const oldItemPrice = amount * itemPrice
-      this.totalPrice = this.totalPrice - oldItemPrice + newAmount * itemPrice
+      this.cart.totalPrice += - oldItemPrice + newAmount * itemPrice
+      storage.update(STORAGE_CART_NAME, this.cart)
+
     },
     addToCart(order) {
       const { id, name, amount, option, special, totalPrice, type, price } = order
