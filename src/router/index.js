@@ -3,6 +3,7 @@ import Home from '@/pages/Home.vue'
 import { useShopStore } from '../stores/shop'
 import { useMenuStore } from '../stores/menu'
 import { useGlobalStore } from '../stores/global'
+import { useFoodStore } from '../stores/foods';
 const routes = [
   {
     path: '/',
@@ -28,7 +29,28 @@ const routes = [
       {
         path: 'foods',
         name: 'FoodTable',
-        component: () => import('@/pages/Admin/components/FoodTable.vue')
+        component: () => import('@/pages/Admin/components/FoodTable.vue'),
+        redirect: () =>  ({name: 'FoodTypeFoods', params: {foodTypeId: 1}}),
+        async beforeEnter(to, from) {
+          const foodStore = useFoodStore()
+          await foodStore.fetchFoodTypes(1)
+        },
+        children: [
+          { 
+            path: ':foodTypeId',
+            name: 'FoodTypeFoods',
+            component: () => import('@/pages/Admin/components/FoodTypeFoods.vue'),
+            async beforeEnter(to, from) {
+              const { foodTypeId } = to.params
+              if(isNaN(+foodTypeId)) {
+                return { name: 'Login' }
+              }
+              console.log({ foodTypeId })
+              const foodStore = useFoodStore()
+              await foodStore.fetchFoods(1, +foodTypeId)
+            }
+          }
+        ]
       },
       {
         path: 'orders',
@@ -41,13 +63,13 @@ const routes = [
     path: '/menuItem/:foodId',
     name: 'MenuItem',
     component: () => import('@/pages/MenuItem.vue'),
-    beforeEnter: async (to, from, next) => {
+    beforeEnter: async (to) => {
       const {foodId} = to.params
       const food = await useMenuStore().fetchFood(+foodId)
       if(food?.foodType?.name === '主餐') {
         await useMenuStore().fetchAddItems()
       }
-      next()
+      return true
     }
   },
   {
@@ -61,7 +83,7 @@ const router = createRouter({
   routes,
 })
 
-router.beforeEach((to, from) => {
+router.beforeEach((to,from) => {
   const globalStore = useGlobalStore()
   if (to.path.includes('admin')) {
     if (to.name === 'Login' || globalStore.isAuth) return true

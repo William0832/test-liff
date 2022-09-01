@@ -38,6 +38,14 @@ import Footer from './components/Footer.vue'
 </script>
 
 <style lang="sass">
+.nav-link
+  color: var(--bs-secondary)
+  transition: all 0.2s
+
+.router-link-active
+  color: var(--bs-dark) !important
+  font-weight: bold
+  transition: all 0.3s
 :root 
   --f-size: 30px
 html, body

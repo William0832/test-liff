@@ -3,7 +3,7 @@
   nav.link-box.nav.col
     router-link(:to="{name: 'OrderTable'}").nav-link orders
     router-link(:to="{name: 'FoodTable'}").nav-link foods
-    router-link(:to="{name: 'Login'}").nav-link.text-danger Logout
+    router-link(:to="{name: 'Login'}").nav-link.link-logout Logout
   .col-1.d-flex.justify-content-end
     button.btn.btn-secondary.position-relative.mb-1(@click="onShowInfo")
       icon(:icon="['fas', 'fa-bell']")
@@ -39,12 +39,14 @@ const onShowInfo =() => {
 <style lang="sass" scoped>
 .row 
   border-block-end: 1px solid var(--bs-secondary)
-.nav-link
-  color: var(--bs-secondary)
-  transition: all 0.2s
+.link-logout
+  color: var(--bs-danger) !important
+// .nav-link
+//   color: var(--bs-secondary)
+//   transition: all 0.2s
 
-.router-link-exact-active
-  color: var(--bs-dark)
-  font-weight: bold
-  transition: all 0.3s
+// .router-link-active
+//   color: var(--bs-dark)
+//   font-weight: bold
+//   transition: all 0.3s
 </style>
