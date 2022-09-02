@@ -1,8 +1,9 @@
 import { defineStore } from 'pinia'
 import { v4 as uid } from 'uuid'
 import api from '@/utils/api'
-
+import {useShopStore} from '@/stores/shop'
 import storage from '@/utils/storage'
+
 const STORAGE_CART_NAME = 'ohiyo-cart'
 const defaultCart = {
   items: [],
@@ -118,7 +119,8 @@ export const useOrderStore = defineStore('order', {
     async confirmOrder () {
       const payload = {
         customer: this.order.customer,
-        cart: this.cart
+        cart: this.cart,
+        shopId: useShopStore().shop.id
       }
       
       const res = await api.post('/orders', payload)

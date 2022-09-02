@@ -4,6 +4,8 @@ import { useShopStore } from '../stores/shop'
 import { useMenuStore } from '../stores/menu'
 import { useGlobalStore } from '../stores/global'
 import { useFoodStore } from '../stores/foods';
+import { useAdminOrderStore } from '../stores/adminOrder'
+
 const routes = [
   {
     path: '/',
@@ -55,7 +57,11 @@ const routes = [
       {
         path: 'orders',
         name: 'OrderTable',
-        component: () => import('@/pages/Admin/components/OrderTable.vue')
+        component: () => import('@/pages/Admin/components/OrderTable.vue'),
+        beforeEnter: async (to) => {
+          const adminOrderStore = useAdminOrderStore()
+          await adminOrderStore.fetchOrders(1,'current')
+        }
       },
     ]
   },
