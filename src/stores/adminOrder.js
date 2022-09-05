@@ -7,8 +7,8 @@ export const useAdminOrderStore = defineStore('adminOrder', {
   getters: {
   },
   actions: {
-    async fetchOrders (shopId, timeType='current') {
-      const res = await api('/orders', { params: { timeType }} )
+    async fetchOrders (shopId, timeType = 'current') {
+      const res = await api('/orders', { params: { timeType } })
       console.log(res)
       // this.adminOrders = orders
     },

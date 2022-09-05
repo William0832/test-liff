@@ -1,9 +1,9 @@
-import { createRouter, createWebHashHistory } from 'vue-router';
+import { createRouter, createWebHashHistory } from 'vue-router'
 import Home from '@/pages/Home.vue'
 import { useShopStore } from '../stores/shop'
 import { useMenuStore } from '../stores/menu'
 import { useGlobalStore } from '../stores/global'
-import { useFoodStore } from '../stores/foods';
+import { useFoodStore } from '../stores/foods'
 import { useAdminOrderStore } from '../stores/adminOrder'
 
 const routes = [
@@ -12,10 +12,10 @@ const routes = [
     name: 'Home',
     component: Home,
     beforeEnter: async (to, from, next) => {
-      await Promise.all [
+      await Promise.all([
         useShopStore().fetchShop(1),
         useMenuStore().fetchFoodsByTypes()
-      ]
+      ])
       next()
     }
   }, {
@@ -32,19 +32,19 @@ const routes = [
         path: 'foods',
         name: 'FoodTable',
         component: () => import('@/pages/Admin/components/FoodTable.vue'),
-        redirect: () =>  ({name: 'FoodTypeFoods', params: {foodTypeId: 1}}),
-        async beforeEnter(to, from) {
+        redirect: () => ({ name: 'FoodTypeFoods', params: { foodTypeId: 1 } }),
+        async beforeEnter (to, from) {
           const foodStore = useFoodStore()
           await foodStore.fetchFoodTypes(1)
         },
         children: [
-          { 
+          {
             path: ':foodTypeId',
             name: 'FoodTypeFoods',
             component: () => import('@/pages/Admin/components/FoodTypeFoods.vue'),
-            async beforeEnter(to, from) {
+            async beforeEnter (to, from) {
               const { foodTypeId } = to.params
-              if(isNaN(+foodTypeId)) {
+              if (isNaN(+foodTypeId)) {
                 return { name: 'Login' }
               }
               console.log({ foodTypeId })
@@ -60,9 +60,9 @@ const routes = [
         component: () => import('@/pages/Admin/components/OrderTable.vue'),
         beforeEnter: async (to) => {
           const adminOrderStore = useAdminOrderStore()
-          await adminOrderStore.fetchOrders(1,'current')
+          await adminOrderStore.fetchOrders(1, 'current')
         }
-      },
+      }
     ]
   },
   {
@@ -70,9 +70,9 @@ const routes = [
     name: 'MenuItem',
     component: () => import('@/pages/MenuItem.vue'),
     beforeEnter: async (to) => {
-      const {foodId} = to.params
+      const { foodId } = to.params
       const food = await useMenuStore().fetchFood(+foodId)
-      if(food?.foodType?.name === '主餐') {
+      if (food?.foodType?.name === '主餐') {
         await useMenuStore().fetchAddItems()
       }
       return true
@@ -81,15 +81,15 @@ const routes = [
   {
     path: '/confirmOrder',
     name: 'ConfirmOrder',
-    component: () => import('@/pages/ConfirmOrder.vue'),
+    component: () => import('@/pages/ConfirmOrder.vue')
   }
-];
+]
 const router = createRouter({
   history: createWebHashHistory(),
-  routes,
+  routes
 })
 
-router.beforeEach((to,from) => {
+router.beforeEach((to, from) => {
   const globalStore = useGlobalStore()
   if (to.path.includes('admin')) {
     if (to.name === 'Login' || globalStore.isAuth) return true
@@ -97,5 +97,4 @@ router.beforeEach((to,from) => {
   }
   return true
 })
-
-export default router;
+export default router

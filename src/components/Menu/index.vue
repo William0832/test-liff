@@ -12,15 +12,15 @@
 </template>
 
 <script>
+import ItemsView from './ItemsView.vue'
+import { useMenuStore } from '@/stores/menu'
+import { storeToRefs } from 'pinia'
 export default {
-  name: 'Menu'
+  name: 'MenuIndex'
 }
 </script>
 
 <script setup>
-import ItemsView from './ItemsView.vue'
-import { useMenuStore } from '@/stores/menu'
-import { storeToRefs } from 'pinia';
 const props = defineProps({
   showMenuTypes: {
     type: Array,

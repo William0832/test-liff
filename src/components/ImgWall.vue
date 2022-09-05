@@ -7,7 +7,7 @@
 const props = defineProps({
   imgs: {
     type: Array,
-    default: []
+    default: () => []
   }
 })
 </script>

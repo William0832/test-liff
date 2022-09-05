@@ -16,11 +16,11 @@ import { onMounted } from 'vue'
 const foodStore = useFoodStore()
 const { foodTypes } = storeToRefs(foodStore)
 
-onMounted(async ()=>{
+onMounted(async () => {
   await foodStore.fetchFoodTypes(1)
 })
 </script>
 
 <style lang="sass" scoped>
-  
+
 </style>

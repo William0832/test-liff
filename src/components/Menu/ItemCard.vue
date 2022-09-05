@@ -23,7 +23,7 @@ const props = defineProps({
   },
   isSoldOut: {
     type: Boolean,
-    default: false,
+    default: false
   },
   name: { type: String, default: '' },
   price: { type: Number, default: 0 }

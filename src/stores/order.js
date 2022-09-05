@@ -1,7 +1,7 @@
 import { defineStore } from 'pinia'
 import { v4 as uid } from 'uuid'
 import api from '@/utils/api'
-import {useShopStore} from '@/stores/shop'
+import { useShopStore } from '@/stores/shop'
 import storage from '@/utils/storage'
 
 const STORAGE_CART_NAME = 'ohiyo-cart'
@@ -9,16 +9,15 @@ const defaultCart = {
   items: [],
   special: '',
   bookingDate: null,
-  totalPrice: 0,
+  totalPrice: 0
 }
 
 Object.freeze(defaultCart)
 
-
 export const useOrderStore = defineStore('order', {
   state: () => ({
     cart: {
-     ...defaultCart
+      ...defaultCart
     },
     order: {
       orderId: null,
@@ -34,16 +33,16 @@ export const useOrderStore = defineStore('order', {
   }),
   getters: {
     isHasMainCourse: (state) => !!state.cart.items.find(e => e.type === '主餐'),
-    cartTotalMoney(state) {
+    cartTotalMoney (state) {
       return state.cart.items?.reduce((sum, curr) => sum + (curr?.itemPrice || 0) * curr.amount, 0)
     },
-    cartItemLen(state) {
+    cartItemLen (state) {
       return state.cart.items?.length
     },
     getItemInfoTexts: (state) => {
       return (item) => {
         const { addItems, special, spicyLevel, type } = item
-        let result = []
+        const result = []
         if (spicyLevel) result.push(`辣度: ${spicyLevel}`)
         if (addItems) result.push(`加料: ${addItems.map(e => e.name).join(', ')}`)
         if (special) result.push(`特別需求: ${special}`)
@@ -54,9 +53,9 @@ export const useOrderStore = defineStore('order', {
   actions: {
     readCart () {
       const cart = storage.read(STORAGE_CART_NAME) || { ...defaultCart }
-      if(cart) this.cart = cart
+      if (cart) this.cart = cart
     },
-    removeItem(cartId) {
+    removeItem (cartId) {
       if (!cartId) throw new Error('no cartId')
       const item = this.cart.items.find(e => e.cartId === cartId)
       if (!item) throw new Error('no item')
@@ -66,7 +65,7 @@ export const useOrderStore = defineStore('order', {
       this.cart.items = this.cart.items.filter(e => e.cartId !== cartId)
       storage.update(STORAGE_CART_NAME, this.cart)
     },
-    addItemAmount(cartId, add) {
+    addItemAmount (cartId, add) {
       if (!cartId) throw new Error('no cartId')
       const item = this.cart.items.find(e => e.cartId === cartId)
       if (!item) throw new Error('no item')
@@ -74,11 +73,10 @@ export const useOrderStore = defineStore('order', {
       const newAmount = amount + add
       item.amount = newAmount < 1 ? 1 : newAmount
       const oldItemPrice = amount * itemPrice
-      this.cart.totalPrice += - oldItemPrice + newAmount * itemPrice
+      this.cart.totalPrice += -oldItemPrice + newAmount * itemPrice
       storage.update(STORAGE_CART_NAME, this.cart)
-
     },
-    addToCart(order) {
+    addToCart (order) {
       const { id, name, amount, option, special, totalPrice, type, price } = order
       const singleItemPrice = totalPrice / amount
       this.cart.totalPrice += totalPrice
@@ -91,10 +89,10 @@ export const useOrderStore = defineStore('order', {
         return false
       }
       const handleSmeOrder = ((order) => {
-        const cartOldItem = this.cart.items.find(e => e.itemId === id
-          && e.itemPrice === singleItemPrice
-          && e.special === special
-          && checkOptionIsSame(e, option)
+        const cartOldItem = this.cart.items.find(e => e.itemId === id &&
+          e.itemPrice === singleItemPrice &&
+          e.special === special &&
+          checkOptionIsSame(e, option)
         )
         if (!cartOldItem) return false
         cartOldItem.amount += amount
@@ -114,7 +112,6 @@ export const useOrderStore = defineStore('order', {
         special
       })
       storage.update(STORAGE_CART_NAME, this.cart)
-
     },
     async confirmOrder () {
       const payload = {
@@ -122,9 +119,9 @@ export const useOrderStore = defineStore('order', {
         cart: this.cart,
         shopId: useShopStore().shop.id
       }
-      
+
       const res = await api.post('/orders', payload)
       console.log(res)
     }
-  },
+  }
 })

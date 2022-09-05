@@ -5,7 +5,7 @@ table.table
       th(v-for="col in cols") {{col.key}}
   template(v-if="foods?.length")
     tbody
-      tr(v-for="item in foods") 
+      tr(v-for="item in foods")
         td(v-for="col in cols") {{item?.[col.key]}}
 </template>
 
@@ -16,12 +16,12 @@ import { onBeforeRouteUpdate } from 'vue-router'
 const foodStore = useFoodStore()
 const { foods } = storeToRefs(foodStore)
 const cols = [
-  {id: 1, key: 'id'}, 
-  {id: 2, key: 'name'}, 
-  {id:2, key: 'info'}, 
-  {id: 3, key: 'price'},
-  {id: 3, key: 'img'},
-  {id: 3, key: 'isSoldOut'}
+  { id: 1, key: 'id' },
+  { id: 2, key: 'name' },
+  { id: 2, key: 'info' },
+  { id: 3, key: 'price' },
+  { id: 3, key: 'img' },
+  { id: 3, key: 'isSoldOut' }
 ]
 onBeforeRouteUpdate(async (to) => {
   const foodTypeId = +to.params.foodTypeId

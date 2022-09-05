@@ -4,7 +4,7 @@
   h3.border-bottom.border-secondary.pb-2 確認餐點
 
   .time.p-2.d-flex.align-items-start
-    icon(:icon="['far', 'fa-clock']").pe-3.pt-1
+    Icon(:icon="['far', 'fa-clock']").pe-3.pt-1
     .d-block
       .form-check
         input.form-check-input#radio-now(type="radio" v-model="isRightNowOrder" :value="true")
@@ -16,7 +16,7 @@
   .date-select(v-if="!isRightNowOrder").px-2
     .input-box.d-flex.mb-2
       label.form-label.me-3
-        icon(:icon="['fas', 'fa-calendar-day']")
+        Icon(:icon="['fas', 'fa-calendar-day']")
       input.form-control(type="date" v-model="bookingDate")
     .ms-1.text-danger 說明: 我們一般只在週末中午營業, 預定完成後請在與店家確認, 謝謝您！
 
@@ -36,7 +36,7 @@
     h5.mt-2.border-bottom.border-secondary.p-2 訂單明細
     p(v-if="cart.items.length === 0") 沒有餐點
     ul.list-group(v-else)
-      li.list-group-item(v-for="(e, index) in cart.items") 
+      li.list-group-item(v-for="(e, index) in cart.items")
         .head.d-flex.justify-content-between.mb-1
           .title.fw-semibold {{ e.name }}
           .price.fw-semibold $ {{ e.itemPrice * e.amount }}
@@ -54,9 +54,8 @@
             .col
               .btn.badge.badge-pill.text-bg-primary.p-2(
                 @click="orderStore.addItemAmount(e.cartId, 1)"
-              ) +          
+              ) +
           button.btn.btn-sm.btn-outline-danger(@click="orderStore.removeItem(e.cartId)") 刪除
-
 
 </template>
 
@@ -65,7 +64,7 @@ import dayjs from 'dayjs'
 import TopToHome from '@/components/TopToHome.vue'
 import { computed } from 'vue'
 import { useOrderStore } from '@/stores/order'
-import { storeToRefs } from 'pinia';
+import { storeToRefs } from 'pinia'
 
 const orderStore = useOrderStore()
 const { cart, getItemInfoTexts, order } = storeToRefs(orderStore)
@@ -80,10 +79,10 @@ const getFirstWeekend = (time) => {
   }
 }
 const bookingDate = computed({
-  get() {
+  get () {
     return cart.value.bookingDate
   },
-  set(nv) {
+  set (nv) {
     if (!checkIsAfterNow(nv)) {
       alert('預定日期必須是未來的某一天, 謝謝！')
       cart.value.bookingDate = null
@@ -99,7 +98,7 @@ const isRightNowOrder = computed({
   get: () => {
     return cart.value.bookingDate == null
   },
-  set(nv) {
+  set (nv) {
     if (!nv) {
       cart.value.bookingDate = getFirstWeekend(new Date()).format('YYYY-MM-DD')
       return

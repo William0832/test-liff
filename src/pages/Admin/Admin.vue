@@ -1,7 +1,7 @@
 <template lang="pug">
 .container-fluid
   h4.mt-2 OHIYO-Admin
-  Navbar     
+  Navbar
   router-view
 </template>
 

@@ -9,7 +9,7 @@ export const useFoodStore = defineStore('food', {
   }),
   getters: {
     activeFood (state) {
-      return state.foods.find(e => e.id  === state.activeFoodId)
+      return state.foods.find(e => e.id === state.activeFoodId)
     }
   },
   actions: {

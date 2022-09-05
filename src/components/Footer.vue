@@ -15,18 +15,16 @@
         v-if="$route.name !== 'Home'"
         @click="$router.push('/')"
       ) 繼續點餐
-      button.btn.btn-primary(@click="submit") 
+      button.btn.btn-primary(@click="submit")
         span(v-if="isConfirmOrder") 結帳
         span(v-else) 確認餐點
         .badge.text-bg-light.ms-1 {{ cartItemLen }}
 </template>
 
-
 <script setup>
 // import liff from '@line/liff'
-
 import { storeToRefs } from 'pinia'
-import { onMounted, reactive, computed } from 'vue'
+import { computed } from 'vue'
 import { useMenuStore } from '@/stores/menu'
 import { useOrderStore } from '@/stores/order'
 import { useRoute, useRouter } from 'vue-router'
@@ -38,7 +36,7 @@ const menuStore = useMenuStore()
 const orderStore = useOrderStore()
 const { cartItemLen, cartTotalMoney } = storeToRefs(orderStore)
 
-const showFooter = computed(() => 
+const showFooter = computed(() =>
   ['Home', 'ConfirmOrder'].includes(route.name)
 )
 const startToOrder = () => {
@@ -48,7 +46,7 @@ const startToOrder = () => {
   }
   menuStore.scrollToShow('menu')
 }
-const submit = async() => {
+const submit = async () => {
   if (isConfirmOrder.value) {
     console.log('結帳')
     orderStore.confirmOrder()

@@ -1,14 +1,14 @@
 <template lang="pug">
 .tab-view(ref="tabView")
   .tab-box(
-    v-for="(menuType, i) in showMenuTypes" 
+    v-for="(menuType, i) in showMenuTypes"
     :key="menuType.id"
     :ref="el => { itemEls[i] = el }"
   )
     h5.mt-1.p-2.pb-1.border-bottom {{ menuType.name }}
     ItemCard(
-      v-for="item in menuType.items" 
-      :key="item.id" 
+      v-for="item in menuType.items"
+      :key="item.id"
       v-bind="item"
       @click="onSelectFood(item)"
     )
@@ -17,7 +17,7 @@
 <script setup>
 import { useRouter } from 'vue-router'
 import { ref, computed, onBeforeUpdate, onMounted } from 'vue'
-import { useMenuStore } from '@/stores/menu';
+import { useMenuStore } from '@/stores/menu'
 import ItemCard from './ItemCard.vue'
 const router = useRouter()
 const menuStore = useMenuStore()
@@ -50,7 +50,7 @@ const itemElBeforeScrollTopList = computed(() => {
   })
 })
 const onSelectFood = item => {
-  if(item.isSoldOut) return
+  if (item.isSoldOut) return
   router.push({ name: 'MenuItem', params: { foodId: item.id } })
 }
 const handelScroll = (e) => {

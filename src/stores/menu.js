@@ -2,7 +2,7 @@ import { defineStore } from 'pinia'
 import { useOrderStore } from './order'
 import { useShopStore } from './shop'
 import api from '@/utils/api'
-const spicyLevels =  [
+const spicyLevels = [
   {
     id: 1, name: '完全不辣', isDefault: false
   },
@@ -11,7 +11,7 @@ const spicyLevels =  [
   },
   {
     id: 3, name: '加辣', isDefault: false
-  },
+  }
 ]
 const getShopId = () => useShopStore().shop.id
 export const useMenuStore = defineStore('menu', {
@@ -23,7 +23,7 @@ export const useMenuStore = defineStore('menu', {
       isShowOnTabs: true,
       items: [
         { id: 1, typeId: 1, name: '蔬食炒泡麵', price: 120, info: '蔬食炒泡麵', isSaleOut: false, img: '' },
-        { id: 2, typeId: 1, name: '蔬食香腸炒泡麵', price: 150, info: '蔬食香腸炒泡麵', isSaleOut: false, img: '' },
+        { id: 2, typeId: 1, name: '蔬食香腸炒泡麵', price: 150, info: '蔬食香腸炒泡麵', isSaleOut: false, img: '' }
       ],
       option: {
         spicyLevels,
@@ -44,7 +44,7 @@ export const useMenuStore = defineStore('menu', {
         { id: 3, typeId: 2, name: '檸檬可樂', price: 50, info: '檸檬可樂', isSaleOut: false, img: '' },
         { id: 4, typeId: 2, name: '椰子水', price: 60, info: '椰子水', isSaleOut: false, img: '' },
         { id: 5, typeId: 2, name: '果汁', price: 80, info: '果汁', isSaleOut: false, img: '' },
-        { id: 6, typeId: 2, name: '啤酒', price: 60, info: '啤酒', isSaleOut: false, img: '' },
+        { id: 6, typeId: 2, name: '啤酒', price: 60, info: '啤酒', isSaleOut: false, img: '' }
       ]
     }],
     showMenuFood: null,
@@ -57,7 +57,7 @@ export const useMenuStore = defineStore('menu', {
     spicyLevels
   }),
   getters: {
-    getPrice() {
+    getPrice () {
       const DRINK_DISCOUNT = 10
       const orderStore = useOrderStore()
       const isHasMainCourse = orderStore.isHasMainCourse
@@ -90,12 +90,12 @@ export const useMenuStore = defineStore('menu', {
       : null
   },
   actions: {
-    async fetchFoodsByTypes() {
+    async fetchFoodsByTypes () {
       const shopId = getShopId()
-      const  { foodTypes } = await api(`shops/${shopId}/fetchFoodsByTypes`)
+      const { foodTypes } = await api(`shops/${shopId}/fetchFoodsByTypes`)
       this.addItems = foodTypes
         .find(e => e.name === '主餐加點').foods
-        .map( e=> ({
+        .map(e => ({
           id: e.id,
           name: e.name,
           info: e.info,
@@ -103,17 +103,17 @@ export const useMenuStore = defineStore('menu', {
           isSoldOut: e.isSoldOut
         }))
       this.type = foodTypes
-        .filter( e => e.name !== '主餐加點')
+        .filter(e => e.name !== '主餐加點')
         .map(e => ({
           id: e.id,
           name: e.name,
           isShowOnTabs: true,
           info: e.info,
-          option: e.name === '主餐' 
+          option: e.name === '主餐'
             ? {
               spicyLevels,
               addItems: this.addItems
-            } 
+            }
             : null,
           items: e.foods.map(e => ({
             id: e.id,
@@ -125,10 +125,10 @@ export const useMenuStore = defineStore('menu', {
           }))
         }))
     },
-    async fetchFood(foodId) {
+    async fetchFood (foodId) {
       const shopId = getShopId()
       const { food } = await api(`/shops/${shopId}/foods/${foodId}`)
-      console.log( food )
+      console.log(food)
       this.showMenuFood = food
       return food
     },
@@ -136,9 +136,9 @@ export const useMenuStore = defineStore('menu', {
       const shopId = getShopId()
       this.addItems = []
       const { foods } = await api(`/shops/${shopId}/foodTypes/3/foods`)
-      console.log( foods )
+      console.log(foods)
       this.addItems = foods
-        .map( e=> ({
+        .map(e => ({
           id: e.id,
           name: e.name,
           info: e.info,
@@ -147,15 +147,14 @@ export const useMenuStore = defineStore('menu', {
         }))
       return foods
     },
-    registerEl(type, el) {
+    registerEl (type, el) {
       this.scrollEls[type] = el
     },
-    scrollToShow(type) {
+    scrollToShow (type) {
       const el = type === 'menu'
         ? this.scrollEls.menu
         : this.menuItemEl
       el.scrollIntoView({ behaver: 'smooth' })
-
     }
-  },
+  }
 })

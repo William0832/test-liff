@@ -19,10 +19,10 @@ const admin = reactive({
   psw: ''
 })
 const login = async () => {
-  await globalStore.login(account, psw)
+  await globalStore.login(reactive.account, reactive.psw)
   router.push({ name: 'OrderTable' })
 }
-onMounted(() =>{
+onMounted(() => {
   globalStore.logout()
 })
 </script>

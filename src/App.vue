@@ -8,7 +8,6 @@
 // import liff from '@line/liff'
 // import { onMounted, reactive } from 'vue'
 import Footer from './components/Footer.vue'
-
 // const lineUserData = reactive({
 //   message: '',
 //   error: '',
@@ -46,7 +45,7 @@ import Footer from './components/Footer.vue'
   color: var(--bs-dark) !important
   font-weight: bold
   transition: all 0.3s
-:root 
+:root
   --f-size: 30px
 html, body
   min-width: 375px
@@ -79,12 +78,12 @@ html, body
   &::after
     content: 'SOLD OUT'
     display: block
-    color: rgba(red, 0.8) 
+    color: rgba(red, 0.8)
     font-style: italic
     font-weight: bolder
     font-size: var(--f-size, 10px)
     letter-spacing: 2px
-    text-shadow: 1px 2px rgba(red, 0.6) 
+    text-shadow: 1px 2px rgba(red, 0.6)
     position: absolute
     text-align: center
     top: 50%

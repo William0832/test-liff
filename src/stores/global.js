@@ -1,5 +1,4 @@
 
-
 import { defineStore } from 'pinia'
 
 export const useGlobalStore = defineStore('global', {
@@ -10,14 +9,14 @@ export const useGlobalStore = defineStore('global', {
     alert: {
       isShow: false,
       type: 'ok',
-      msg: '',
+      msg: ''
     }
-    
+
   }),
   getters: {
   },
   actions: {
-    async login(account, psw) {
+    async login (account, psw) {
       this.isAuth = true
     },
     logout () {
