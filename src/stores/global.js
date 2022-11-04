@@ -3,7 +3,7 @@ import { defineStore } from 'pinia'
 
 export const useGlobalStore = defineStore('global', {
   state: () => ({
-    isAuth: false,
+    isAuth: true,
     isLoading: false,
     alertTypes: ['ok', 'ng'],
     alert: {
@@ -17,6 +17,7 @@ export const useGlobalStore = defineStore('global', {
   },
   actions: {
     async login (account, psw) {
+      if (account !== 'admin' || psw !== 'admin') throw new Error('login fail')
       this.isAuth = true
     },
     logout () {
