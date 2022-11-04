@@ -47,7 +47,6 @@ const routes = [
               if (isNaN(+foodTypeId)) {
                 return { name: 'Login' }
               }
-              console.log({ foodTypeId })
               const foodStore = useFoodStore()
               await foodStore.fetchFoods(1, +foodTypeId)
             }
@@ -56,12 +55,17 @@ const routes = [
       },
       {
         path: 'orders',
-        name: 'OrderTable',
-        component: () => import('@/pages/Admin/components/OrderTable.vue'),
-        beforeEnter: async (to) => {
-          const adminOrderStore = useAdminOrderStore()
-          await adminOrderStore.fetchOrders(1, 'current')
-        }
+        name: 'OrderManager',
+        component: () => import('@/pages/Admin/components/OrderManager.vue'),
+        redirect: () => ({ name: 'OrderTypes', params: { orderType: 'current' } }),
+
+        children: [
+          {
+            path: ':orderType',
+            name: 'OrderTypes',
+            component: () => import('@/pages/Admin/components/OrderTypes.vue')
+          }
+        ]
       }
     ]
   },
@@ -92,7 +96,7 @@ const router = createRouter({
 router.beforeEach((to, from) => {
   const globalStore = useGlobalStore()
   if (to.path.includes('admin')) {
-    if (to.name === 'Login' || globalStore.isAuth) return true
+    if (globalStore.isAuth) return true
     return { name: 'Login' }
   }
   return true
