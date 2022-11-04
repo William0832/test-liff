@@ -92,7 +92,7 @@ export const useMenuStore = defineStore('menu', {
   actions: {
     async fetchFoodsByTypes () {
       const shopId = getShopId()
-      const { foodTypes } = await api(`shops/${shopId}/fetchFoodsByTypes`)
+      const { foodTypes } = await api(`/shops/${shopId}/fetchFoodsByTypes`)
       this.addItems = foodTypes
         .find(e => e.name === '主餐加點').foods
         .map(e => ({
