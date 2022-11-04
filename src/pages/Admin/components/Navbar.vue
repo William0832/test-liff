@@ -1,7 +1,7 @@
 <template lang="pug">
 .row(v-if="globalStore.isAuth")
   nav.link-box.nav.col
-    router-link(:to="{ name: 'OrderTable' }").nav-link orders
+    router-link(:to="{ name: 'OrderManager' }").nav-link orders
     router-link(:to="{ name: 'FoodTable' }").nav-link foods
     router-link(:to="{ name: 'Login' }").nav-link.link-logout Logout
   .col-1.d-flex.justify-content-end
