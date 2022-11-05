@@ -49,7 +49,14 @@ const routes = [
               }
               const foodStore = useFoodStore()
               await foodStore.fetchFoods(1, +foodTypeId)
-            }
+            },
+            children: [
+              {
+                path: ':type',
+                name: 'FoodEdit',
+                component: () => import('@/pages/Admin/components/FoodEdit.vue')
+              }
+            ]
           }
         ]
       },
