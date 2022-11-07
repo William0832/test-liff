@@ -3,6 +3,7 @@ import { v4 as uid } from 'uuid'
 import api from '@/utils/api'
 import { useShopStore } from '@/stores/shop'
 import storage from '@/utils/storage'
+import { useUserStore } from './user'
 
 const STORAGE_CART_NAME = 'ohiyo-cart'
 const defaultCart = {
@@ -24,10 +25,10 @@ export const useOrderStore = defineStore('order', {
       bookingDate: null,
       totalPrice: 0,
       customer: {
-        name: 'William Test',
-        lineName: 'William Test',
-        lineId: 'test123456',
-        phone: '0987654321'
+        name: '',
+        lineName: '',
+        lineId: '',
+        phone: ''
       }
     }
   }),
@@ -51,6 +52,17 @@ export const useOrderStore = defineStore('order', {
     }
   },
   actions: {
+    async getUser () {
+      const userStore = useUserStore()
+      await userStore.getLineUserData()
+      const { name, id, imgUrl } = userStore.user
+      this.order.customer = {
+        name: name || this.order.customer.name,
+        lineName: name || this.order.customer.lineName,
+        lineId: id || this.order.customer.lineId,
+        phone: this.order.customer.phone
+      }
+    },
     readCart () {
       const cart = storage.read(STORAGE_CART_NAME) || { ...defaultCart }
       if (cart) this.cart = cart

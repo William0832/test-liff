@@ -1,42 +1,35 @@
 <template lang="pug">
 .container-fluid.position-relative.d-flex.flex-column.p-0.h-100
-  router-view
-  Footer
+  MyLoading(v-if="!isLineLogin")
+  template(v-else)
+    router-view
+    Footer
 </template>
 
 <script setup>
-// import liff from '@line/liff'
-// import { onMounted, reactive } from 'vue'
+import MyLoading from './components/MyLoading.vue'
+import { storeToRefs } from 'pinia'
+import { onMounted, reactive, ref } from 'vue'
 import Footer from './components/Footer.vue'
-// const lineUserData = reactive({
-//   message: '',
-//   error: '',
-//   isLogin: false
-// })
-
-// onMounted(async () => {
-//   try {
-//     await liff.init({
-//       liffId: import.meta.env.VITE_LIFF_ID,
-//       withLoginOnExternalBrowser: false
-//     })
-//     lineUserData.isLogin = liff.isLoggedIn()
-//     lineUserData.message = 'LIFF init succeeded.'
-//   } catch (err) {
-//     lineUserData.message = 'LIFF init failed.'
-//     lineUserData.error = `${err}`
-//   }
-//   // try {
-//   //   const res = await gApi.login()
-//   //   console.log(res)
-//   // } catch (err) {
-//   //   console.error(err)
-//   //   module.error = `${err.details}`
-//   // }
-// })
+import { useUserStore } from './stores/user'
+const userStore = useUserStore()
+const { isLineLogin } = storeToRefs(userStore)
+onMounted(async () => {
+  try {
+    await userStore.getLineUserData()
+  } catch (err) {
+    console.warn(err)
+  }
+})
 </script>
 
 <style lang="sass">
+body
+  position: relative
+.center
+  display: flex
+  align-items: center
+  justify-content: center
 .nav-link
   color: var(--bs-secondary)
   transition: all 0.2s

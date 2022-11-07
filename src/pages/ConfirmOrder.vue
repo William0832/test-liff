@@ -62,10 +62,11 @@
 <script setup>
 import dayjs from 'dayjs'
 import TopToHome from '@/components/TopToHome.vue'
-import { computed } from 'vue'
+import { computed, onMounted } from 'vue'
 import { useOrderStore } from '@/stores/order'
 import { storeToRefs } from 'pinia'
-
+import { useUserStore } from '../stores/user'
+const userStore = useUserStore()
 const orderStore = useOrderStore()
 const { cart, getItemInfoTexts, order } = storeToRefs(orderStore)
 const checkWeekend = (time) => [0, 6].includes(dayjs(time).day())
@@ -105,6 +106,9 @@ const isRightNowOrder = computed({
     }
     cart.value.bookingDate = null
   }
+})
+onMounted(async () => {
+  await userStore.getLineUserData()
 })
 </script>
 
