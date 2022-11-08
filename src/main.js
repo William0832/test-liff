@@ -10,7 +10,8 @@ import { FontAwesomeIcon } from '@fortawesome/vue-fontawesome'
 /* import specific icons */
 import { faPhone, faAngleUp, faPlus, faMinus, faXmark, faCalendarDay, faBell } from '@fortawesome/free-solid-svg-icons'
 import { faClock as farClock, faMap as farMap } from '@fortawesome/free-regular-svg-icons'
-
+import VueSweetalert2 from 'vue-sweetalert2'
+import 'sweetalert2/dist/sweetalert2.min.css'
 const pinia = createPinia()
 const app = createApp(App)
 // /* add icons to the library */
@@ -22,6 +23,7 @@ library.add(
 )
 
 app.component('Icon', FontAwesomeIcon)
+app.use(VueSweetalert2)
 app.use(router)
 app.use(pinia)
 app.mount('#app')
