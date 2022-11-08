@@ -1,6 +1,7 @@
 import { defineStore } from 'pinia'
 import api from '@/utils/api'
 import { useShopStore } from './shop'
+import { debug } from '../utils/swal'
 export const useFoodStore = defineStore('food', {
   state: () => ({
     foods: [],
@@ -23,8 +24,12 @@ export const useFoodStore = defineStore('food', {
   },
   actions: {
     async fetchFoodTypes (shopId) {
-      const { foodTypes } = await api(`shops/${shopId}/fetchFoodsByTypes`)
-      this.foodTypes = foodTypes
+      try {
+        const { foodTypes } = await api(`shops/${shopId}/fetchFoodsByTypes`)
+        this.foodTypes = foodTypes
+      } catch (err) {
+        debug(err)
+      }
     },
     async fetchFoods (shopId, foodTypeId) {
       const { foods } = await api(`shops/${shopId}/foodTypes/${foodTypeId}/foods`)
@@ -48,7 +53,7 @@ export const useFoodStore = defineStore('food', {
         const res = api.delete(`shops/${shopId}/foods/${foodId}`)
         this.foods = this.foods.filter(e => e.id !== foodId)
       } catch (err) {
-        console.log(err)
+        debug(err)
       }
     }
   }

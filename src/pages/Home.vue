@@ -22,31 +22,8 @@ const shopStore = useShopStore()
 const menuStore = useMenuStore()
 const { shop, nowState } = storeToRefs(shopStore)
 const { showMenuTypes } = storeToRefs(menuStore)
-// const lineUserData = reactive({
-//   message: '',
-//   error: '',
-//   isLogin: false
-// })
 
 onMounted(async () => {
   useOrderStore().readCart()
-  // try {
-  //   await liff.init({
-  //     liffId: import.meta.env.VITE_LIFF_ID,
-  //     withLoginOnExternalBrowser: false
-  //   })
-  //   lineUserData.isLogin = liff.isLoggedIn()
-  //   lineUserData.message = 'LIFF init succeeded.'
-  // } catch (err) {
-  //   lineUserData.message = 'LIFF init failed.'
-  //   lineUserData.error = `${err}`
-  // }
-  // try {
-  //   const res = await gApi.login()
-  //   console.log(res)
-  // } catch (err) {
-  //   console.error(err)
-  //   module.error = `${err.details}`
-  // }
 })
 </script>

@@ -7,9 +7,10 @@
 </template>
 
 <script setup>
-import MyLoading from './components/MyLoading.vue'
 import { storeToRefs } from 'pinia'
-import { onMounted, reactive, ref } from 'vue'
+import { onMounted } from 'vue'
+import { debug, ok } from '@/utils/swal.js'
+import MyLoading from './components/MyLoading.vue'
 import Footer from './components/Footer.vue'
 import { useUserStore } from './stores/user'
 const userStore = useUserStore()
@@ -17,8 +18,10 @@ const { isLineLogin } = storeToRefs(userStore)
 onMounted(async () => {
   try {
     await userStore.getLineUserData()
+    const { name } = userStore.userData
+    if (name) ok(`Welcome ${name}`)
   } catch (err) {
-    console.warn(err)
+    debug(err)
   }
 })
 </script>

@@ -1,5 +1,6 @@
 import { defineStore } from 'pinia'
 import api from '@/utils/api'
+import { debug } from '../utils/swal'
 
 const checkTimeIsBetweenRange = (startStr, endStr) => {
   const now = new Date()
@@ -45,24 +46,28 @@ export const useShopStore = defineStore('shop', {
   },
   actions: {
     async fetchShop (id) {
-      const { shop: shopData } = await api(`shops/${id}`, { params: { includeFoods: 'true' } })
-      const {
-        id: shopId, name, address,
-        phone, info, openStatus, activeSchedule
-      } = shopData
-      const { weekDayOpenTimes } = activeSchedule
-      this.shop = {
-        ...this.shop,
-        id: shopId,
-        name,
-        address,
-        phone,
-        info,
-        isRegular: openStatus === 'bySchedule',
-        activeTime: this.shop.activeTime.map(e => ({
-          ...e,
-          activeTime: weekDayOpenTimes.find(item => item.weekDay === e.dayId)?.openTime || '休息中'
-        }))
+      try {
+        const { shop: shopData } = await api(`shops/${id}`, { params: { includeFoods: 'true' } })
+        const {
+          id: shopId, name, address,
+          phone, info, openStatus, activeSchedule
+        } = shopData
+        const { weekDayOpenTimes } = activeSchedule
+        this.shop = {
+          ...this.shop,
+          id: shopId,
+          name,
+          address,
+          phone,
+          info,
+          isRegular: openStatus === 'bySchedule',
+          activeTime: this.shop.activeTime.map(e => ({
+            ...e,
+            activeTime: weekDayOpenTimes.find(item => item.weekDay === e.dayId)?.openTime || '休息中'
+          }))
+        }
+      } catch (err) {
+        debug(err)
       }
     }
   }

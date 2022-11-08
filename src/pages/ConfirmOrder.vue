@@ -10,9 +10,9 @@
         input.form-check-input#radio-now(type="radio" v-model="isRightNowOrder" :value="true")
         label.form-check-label(for="radio-now") 現點現做
           span.ms-1.text-secondary (預計20~30分鐘)
-      .form-check
-        input.form-check-input#radio-pre(type="radio" v-model="isRightNowOrder" :value="false")
-        label.form-check-label(for="radio-pre") 預定日期
+      //- .form-check
+      //-   input.form-check-input#radio-pre(type="radio" v-model="isRightNowOrder" :value="false")
+      //-   label.form-check-label(for="radio-pre") 預定日期
   .date-select(v-if="!isRightNowOrder").px-2
     .input-box.d-flex.mb-2
       label.form-label.me-3
@@ -108,7 +108,8 @@ const isRightNowOrder = computed({
   }
 })
 onMounted(async () => {
-  await userStore.getLineUserData()
+  useOrderStore().readCart()
+  await orderStore.getUser()
 })
 </script>
 
