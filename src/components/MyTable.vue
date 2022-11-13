@@ -6,7 +6,7 @@
       thead
         tr(:data-is-sort="!!pagination.orderBy")
           slot(v-for="col in defaultCols" :key="col.value" :name="`th-${col.key}`" :col="col")
-            th(:data-sort-by="col.value === pagination.orderBy ? pagination.orderBy: none") {{col.label}}
+            th(:data-sort-by="col.value === pagination.orderBy ? pagination.orderBy : null") {{col.label}}
     slot(name="tbody" :props="props")
       tbody(v-if="rows.length > 0")
         slot(v-for="(row, index) in rows" :key="row.id" :name="`tr-${index}`" :row="row")
