@@ -40,6 +40,9 @@ export const useFoodStore = defineStore('food', {
     skip (state) {
       const { page, take } = state.pagination
       return take * (page - 1)
+    },
+    take (state) {
+      return state.pagination.take
     }
   },
   actions: {

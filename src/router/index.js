@@ -5,18 +5,30 @@ import { useMenuStore } from '../stores/menu'
 import { useGlobalStore } from '../stores/global'
 import { useFoodStore } from '../stores/foods'
 import { useAdminOrderStore } from '../stores/adminOrder'
-
+import { debug, ng, ok } from '../utils/swal'
+import { useOrderStore } from '../stores/order'
+import { useUserStore } from '../stores/user'
 const routes = [
   {
     path: '/',
     name: 'Home',
     component: Home,
     beforeEnter: async (to, from, next) => {
-      await Promise.all([
-        useShopStore().fetchShop(1),
-        useMenuStore().fetchFoodsByTypes()
-      ])
-      next()
+      // const globalStore = useGlobalStore()
+      // const userStore = useUserStore()
+      useOrderStore().readCart()
+      try {
+        // await userStore.getLineUserData()
+        // const { name } = userStore.userData
+        // if (name) ok(`Welcome ${name}`)
+        await Promise.all([
+          useShopStore().fetchShop(1),
+          useMenuStore().fetchFoodsByTypes()
+        ])
+        next()
+      } catch (err) {
+        ng('發生錯誤')
+      }
     }
   }, {
     path: '/admin',
@@ -48,13 +60,26 @@ const routes = [
                 return { name: 'Login' }
               }
               const foodStore = useFoodStore()
-              await foodStore.fetchFoods(1, +foodTypeId)
+              // await foodStore.fetchFoods(1, +foodTypeId)
             },
             children: [
               {
                 path: ':type',
                 name: 'FoodEdit',
-                component: () => import('@/pages/Admin/components/FoodEdit.vue')
+                component: () => import('@/pages/Admin/components/FoodEdit.vue'),
+                async beforeEnter (to, from) {
+                  const { query, params } = to
+                  const { id } = query
+                  const foodStore = useFoodStore()
+                  if (params.type === 'update' && id) {
+                    await foodStore.fetchFood(id)
+                    return
+                  }
+                  if (params.type === 'create') {
+                    foodStore.initFoodForEdited()
+                    foodStore.foodForEdited.foodTypeId = params.foodTypeId
+                  }
+                }
               }
             ]
           }

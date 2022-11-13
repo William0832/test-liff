@@ -22,7 +22,7 @@ import MySwitchVue from '@/components/MySwitch.vue'
 import MyTableVue from '@/components/MyTable.vue'
 import { useFoodStore } from '@/stores/foods'
 import { storeToRefs } from 'pinia'
-import { watchPostEffect } from 'vue'
+import { watch, watchPostEffect } from 'vue'
 import { onBeforeRouteUpdate, useRoute, useRouter } from 'vue-router'
 const router = useRouter()
 const route = useRoute()
@@ -33,13 +33,13 @@ const toUpdateFood = (row) => {
 }
 const update = (e) => { console.log(e) }
 const foodStore = useFoodStore()
-const { foods, pagination } = storeToRefs(foodStore)
+const { foods, pagination, take } = storeToRefs(foodStore)
 const cols = [
-  { id: 1, key: 'id', label: 'id' },
+  { id: 1, key: 'id', label: 'Id' },
   { id: 2, key: 'name', label: '名稱' },
-  { id: 3, key: 'info', label: 'info' },
+  { id: 3, key: 'info', label: 'Info' },
   { id: 4, key: 'price', label: '$' },
-  { id: 5, key: 'isSoldOut', label: 'soldOut' },
+  { id: 5, key: 'isSoldOut', label: 'sold out' },
   { id: 6, key: 'action', label: '' }
 ]
 const goEdit = (type, foodId) => {
@@ -53,9 +53,17 @@ const goEdit = (type, foodId) => {
     }
   })
 }
+
 onBeforeRouteUpdate(async (to) => {
   pagination.value.page = 1
 })
+
+watch(take, (nv, ov) => {
+  if (nv && pagination.value.page !== 1) {
+    pagination.value.page = 1
+  }
+})
+
 watchPostEffect(async () => {
   await foodStore.fetchFoods(1, route.params.foodTypeId)
 })
