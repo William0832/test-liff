@@ -1,29 +1,19 @@
 <template lang="pug">
 .container-fluid.position-relative.d-flex.flex-column.p-0.h-100
-  MyLoading(v-if="!isLineLogin")
-  template(v-else)
-    router-view
-    Footer
+  MyLoading(v-if="isLoading")
+  router-view
+  Footer
 </template>
 
 <script setup>
 import { storeToRefs } from 'pinia'
+import { useGlobalStore } from '@/stores/global.js'
 import { onMounted } from 'vue'
 import { debug, ok } from '@/utils/swal.js'
 import MyLoading from './components/MyLoading.vue'
 import Footer from './components/Footer.vue'
-import { useUserStore } from './stores/user'
-const userStore = useUserStore()
-const { isLineLogin } = storeToRefs(userStore)
-onMounted(async () => {
-  try {
-    await userStore.getLineUserData()
-    const { name } = userStore.userData
-    if (name) ok(`Welcome ${name}`)
-  } catch (err) {
-    debug(err)
-  }
-})
+const globalStore = useGlobalStore()
+const { isLoading } = storeToRefs(globalStore)
 </script>
 
 <style lang="sass">
