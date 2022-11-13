@@ -4,7 +4,7 @@
     button.btn.btn-primary(@click="goEdit('create')") Add
   router-view
   template(v-if="$route.name !== 'FoodEdit'")
-    MyTableVue(:cols="cols" :rows="foods")
+    MyTableVue(:cols="cols" :rows="foods" :pagination="pagination")
       template(#isSoldOut="{item, row}")
         td
           MySwitchVue(:modalValue="item" @update:modalValue="update")
@@ -12,22 +12,28 @@
       template(#action="{row}")
         td
           .d-flex.gap-1
-            button.btn.btn-sm.btn-outline-primary Edit
+            button.btn.btn-sm.btn-outline-primary(@click="toUpdateFood(row)") Edit
             button.btn.btn-sm.btn-outline-danger Delete
-    //-   tr(v-for="item in foods")
-    //-     td(v-for="col in cols") {{item?.[col.key]}}
 </template>
 
 <script setup>
+
 import MySwitchVue from '@/components/MySwitch.vue'
 import MyTableVue from '@/components/MyTable.vue'
 import { useFoodStore } from '@/stores/foods'
 import { storeToRefs } from 'pinia'
-import { onBeforeRouteUpdate, useRouter } from 'vue-router'
+import { watchPostEffect } from 'vue'
+import { onBeforeRouteUpdate, useRoute, useRouter } from 'vue-router'
 const router = useRouter()
+const route = useRoute()
+
+const toUpdateFood = (row) => {
+  const { id } = row
+  router.push({ name: 'FoodEdit', params: { type: 'update' }, query: { id } })
+}
 const update = (e) => { console.log(e) }
 const foodStore = useFoodStore()
-const { foods } = storeToRefs(foodStore)
+const { foods, pagination } = storeToRefs(foodStore)
 const cols = [
   { id: 1, key: 'id', label: 'id' },
   { id: 2, key: 'name', label: '名稱' },
@@ -48,8 +54,10 @@ const goEdit = (type, foodId) => {
   })
 }
 onBeforeRouteUpdate(async (to) => {
-  const foodTypeId = +to.params.foodTypeId
-  await foodStore.fetchFoods(1, foodTypeId)
+  pagination.value.page = 1
+})
+watchPostEffect(async () => {
+  await foodStore.fetchFoods(1, route.params.foodTypeId)
 })
 </script>
 
