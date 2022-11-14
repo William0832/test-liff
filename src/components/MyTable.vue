@@ -16,25 +16,16 @@
       tbody.align-middle(v-else)
         tr.text-center
           td(:colspan="defaultCols.length") 沒有資料
-  MyPagination(:max="pagination.max", v-model:page="pagination.page" v-model:take="pagination.take")
+  MyPagination(
+    :max="pagination.max"
+    v-model:page="pagination.page"
+    v-model:take="pagination.take")
 </template>
 
 <script setup>
 import { ref, computed } from 'vue'
 import MyPagination from '@/components/MyPagination.vue'
 const props = defineProps({
-  sortData: {
-    type: [Object, null],
-    default: () => null
-  },
-  selectedIds: {
-    type: Array,
-    default: () => null
-  },
-  title: {
-    type: String,
-    default: ''
-  },
   cols: {
     type: Array,
     default: () => []
@@ -50,14 +41,6 @@ const props = defineProps({
       page: 1,
       size: 10
     })
-  },
-  idName: {
-    type: String,
-    default: ''
-  },
-  isLoading: {
-    type: Boolean,
-    default: false
   }
 })
 const defaultCols = computed(() => {
@@ -68,53 +51,7 @@ const defaultCols = computed(() => {
     key: e
   }))
 })
-const emits = defineEmits(['updatePagination', 'update:sortData', 'updateSelect'])
-
 const tbody = ref(null)
-
-const defaultSelectedIds = computed({
-  get: () => props.selectedIds,
-  sett: (nv) => {
-    emits('updateSelect', { ids: nv })
-  }
-})
-
-const orderTypeList = computed(() => {
-  if (!props.sortData) return ''
-  return props.cols.map(col => {
-    if (col.value === props.sortData.key) {
-      return props.sortData.type
-    }
-    return ''
-  })
-})
-const onSort = (key) => {
-  if (!props.sortData) return
-  if (props.sortData.key === key) {
-    const type = props.sortData.type === ''
-      ? 'desc'
-      : props.sortData.type === 'asc' ? '' : 'asc'
-    emits('update:sortData', { key, type })
-    return
-  }
-  emits('update:sortData', { key, type: 'desc' })
-}
-const onSelect = (checked, value) => {
-  if (value === 'all') {
-    defaultSelectedIds.value = checked ? props.rows.map(item => item[`${props.idName}Id`]) : []
-    return
-  }
-  defaultSelectedIds.value = defaultSelectedIds.value.includes(value)
-    ? defaultSelectedIds.value.filter(item => item !== value)
-    : [...defaultSelectedIds.value, value]
-}
-const currentPage = computed({
-  get: () => props.pagination ? props.pagination.page : 1,
-  set (nv) {
-    emits('updatePagination', nv)
-  }
-})
-
 </script>
 
 <style lang="sass" scoped>

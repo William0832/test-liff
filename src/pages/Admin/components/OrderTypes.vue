@@ -1,6 +1,6 @@
 <template lang="pug">
 .container-fluid
-  MyTableVue(:cols="cols", :rows="adminOrders")
+  MyTable(:cols="cols", :rows="adminOrders" :pagination="pagination")
     template(#status="{row}")
       td
         .d-flex.flex-column.gap-1
@@ -27,13 +27,13 @@
 <script setup>
 import dayjs from 'dayjs'
 import OrderFoodsCard from './OrderFoodsCard.vue'
-import MyTableVue from '@/components/MyTable.vue'
+import MyTable from '@/components/MyTable.vue'
 
+import { usePageStore } from '@/stores/page'
 import { useAdminOrderStore } from '@/stores/adminOrder'
 import { storeToRefs } from 'pinia'
-import { watchEffect, computed } from 'vue'
+import { watchEffect, computed, watch } from 'vue'
 import { useRoute } from 'vue-router'
-
 const setBgClass = (value) => {
   if (value === 'canceled') return 'bg-danger'
   if (value === 'pending') return 'bg-secondary'
@@ -46,7 +46,7 @@ const { adminOrders } = storeToRefs(adminOrderStore)
 const { updateOrderStatus } = adminOrderStore
 const cols = [
   {
-    label: 'id',
+    label: 'Id',
     key: 'id'
   }, {
     label: '備註',
@@ -67,19 +67,17 @@ const cols = [
     key: 'orderFoods'
   },
   {
-    label: 'update',
+    label: 'Update',
     key: 'updatedAt'
   }
 ]
-// await adminOrderStore.fetchOrders(route.params.orderTypes)
-// const orderType = computed(() => route.params.orderTypes)
+
+const pageStore = usePageStore()
+pageStore.setOrder({ by: 'updatedAt', type: 'desc' })
+const { pagination } = storeToRefs(pageStore)
 watchEffect(async () => {
-  console.log(route.params.orderType)
-  await adminOrderStore.fetchOrders(route.params.orderType)
+  await adminOrderStore.fetchAdminOrders(route.params.orderType)
 })
-// const props = defineProps({
-//   cols:
-// })
 </script>
 
 <style lang="sass" scoped>

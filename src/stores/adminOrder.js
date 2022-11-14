@@ -1,15 +1,17 @@
 import { defineStore } from 'pinia'
 import api from '@/utils/api'
 import { useShopStore } from '@/stores/shop'
+import { usePageStore } from '@/stores/page'
 export const useAdminOrderStore = defineStore('adminOrder', {
   state: () => ({
-    orderTypes: [{
-      id: 1,
-      name: 'current'
-    }, {
-      id: 2,
-      name: 'history'
-    }],
+    orderTypes: [
+      {
+        id: 1,
+        name: 'current'
+      }, {
+        id: 2,
+        name: 'history'
+      }],
     adminOrders: []
   }),
   getters: {
@@ -36,16 +38,24 @@ export const useAdminOrderStore = defineStore('adminOrder', {
       }
       order.prepareStatus = 'pending'
     },
-    async fetchOrders (timeType = 'current') {
+    async fetchAdminOrders (timeType = 'current') {
       const shopId = useShopStore().shop.id
-      const res = await api('/orders', { params: { timeType } })
-      console.log(res)
-      this.adminOrders = res?.orders.map(o => ({
+      const pageStore = usePageStore()
+      const { orderBy, orderType, take } = pageStore.pagination
+      const params = {
+        timeType,
+        orderBy,
+        orderType,
+        take,
+        skip: pageStore.skip
+      }
+      const { total, orders } = await api('/orders', { params })
+      pageStore.setMax(total)
+      this.adminOrders = orders.map(o => ({
         ...o,
         ownerName: o?.owner?.name,
         ownerPhone: o?.owner?.phone
       }))
-      // this.adminOrders = orders
     },
     async fetchOrder (shopId, orderId) {
       // const { foods } = await api(`shops/${shopId}/foodTypes/${foodTypeId}/foods`)
