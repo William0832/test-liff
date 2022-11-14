@@ -27,3 +27,9 @@ export const debug = (msg, options) => swal.fire({
   showConfirmButton: true,
   ...options
 })
+export const modal = (msg, options) => swal.fire({
+  title: msg,
+  showCancelButton: true,
+  confirmButtonColor: '#d33',
+  confirmButtonText: 'Delete'
+})

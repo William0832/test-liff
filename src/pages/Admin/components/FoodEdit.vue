@@ -9,7 +9,7 @@ form.form.g-3.needs-validation.row
     input#price.form-control(v-model="food.price" require type='number')
     .invalid-feedback required
   .col-md-6
-    .form-check
+    .form-check.form-switch.sold-out-col
       input#is-sold-out.form-check-input(v-model="food.isSoldOut" require type="checkbox")
       label(for="is-sold-out").form-check-label Sold Out
 
@@ -23,26 +23,26 @@ form.form.g-3.needs-validation.row
   .col-12
     .btns.d-flex.justify-content-end.gap-2
       button.btn.btn-secondary(@click="$router.go(-1)") Cancel
-      button.btn.btn-primary(@click.prevent="submitFood($route.params.type)") Submit
+      button.btn.btn-primary(
+        :class="{disabled:isLoading}"
+        @click.prevent="onSubmit") Submit
   template(v-if="msg")
     ToastVue(:msg="msg")
 </template>
 
 <script setup>
+import { useGlobalStore } from '@/stores/global'
 import ToastVue from '@/components/Toast.vue'
 import { storeToRefs } from 'pinia'
 import { reactive, ref, computed, onMounted } from 'vue'
-import { useRoute } from 'vue-router'
-import { useFoodStore } from '../../../stores/foods'
+import { useRoute, useRouter } from 'vue-router'
+import { useFoodStore } from '@/stores/foods'
+import { ng } from '@/utils/swal'
 const msg = ref('')
+const globalStore = useGlobalStore()
+const { isLoading } = storeToRefs(globalStore)
 const foodStore = useFoodStore()
 const { foodForEdited: food } = storeToRefs(foodStore)
-const data = reactive({
-  name: '',
-  price: 0,
-  info: '',
-  isSoldOut: false
-})
 const { submitFood } = foodStore
 const foodTypes = ref([
   { id: 0, name: '請選擇' },
@@ -54,9 +54,15 @@ const route = useRoute()
 const foodTypeId = computed(() => route.params.foodTypeId)
 const type = computed(() => route.params.type)
 const foodId = computed(() => route.query.foodId)
-onMounted(async () => {
-  data.foodTypeId = foodTypeId.value
-})
+const router = useRouter()
+const onSubmit = async () => {
+  try {
+    await submitFood(route.params.type)
+    router.push({ name: 'FoodTypeFoods', params: { foodTypeId: foodTypeId.value } })
+  } catch (err) {
+    ng('Error')
+  }
+}
 </script>
 
 <style lang="sass" scoped>

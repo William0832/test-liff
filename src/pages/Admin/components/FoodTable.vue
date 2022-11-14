@@ -15,12 +15,14 @@ import { onMounted } from 'vue'
 
 const foodStore = useFoodStore()
 const { foodTypes } = storeToRefs(foodStore)
-
-// onMounted(async () => {
-//   await foodStore.fetchFoodTypes(1)
-// })
 </script>
 
-<style lang="sass" scoped>
+<style lang="sass">
+.sold-out-col
+  .form-check-input:checked
+    background-color: var(--bs-danger)
+    border-color: var(--bs-danger)
+</style>
 
+<style lang="sass" scoped>
 </style>

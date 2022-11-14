@@ -7,22 +7,23 @@
     MyTableVue(:cols="cols" :rows="foods" :pagination="pagination")
       template(#isSoldOut="{item, row}")
         td
-          MySwitchVue(:modalValue="item" @update:modalValue="update")
-          | {{item}}
+          MySwitchVue.sold-out-col(
+            :modalValue="item"
+            @update:modalValue="onUpdateSwitch(row.id, $event)")
       template(#action="{row}")
         td
           .d-flex.gap-1
             button.btn.btn-sm.btn-outline-primary(@click="toUpdateFood(row)") Edit
-            button.btn.btn-sm.btn-outline-danger Delete
+            button.btn.btn-sm.btn-outline-danger(@click="onDelete(row)") Delete
 </template>
 
 <script setup>
-
+import { ok, ng, modal } from '@/utils/swal'
 import MySwitchVue from '@/components/MySwitch.vue'
 import MyTableVue from '@/components/MyTable.vue'
 import { useFoodStore } from '@/stores/foods'
 import { storeToRefs } from 'pinia'
-import { watch, watchPostEffect } from 'vue'
+import { watch, watchPostEffect, onErrorCaptured } from 'vue'
 import { onBeforeRouteUpdate, useRoute, useRouter } from 'vue-router'
 const router = useRouter()
 const route = useRoute()
@@ -31,7 +32,7 @@ const toUpdateFood = (row) => {
   const { id } = row
   router.push({ name: 'FoodEdit', params: { type: 'update' }, query: { id } })
 }
-const update = (e) => { console.log(e) }
+
 const foodStore = useFoodStore()
 const { foods, pagination, take } = storeToRefs(foodStore)
 const cols = [
@@ -53,7 +54,24 @@ const goEdit = (type, foodId) => {
     }
   })
 }
-
+const onDelete = async (row) => {
+  console.log(row.id)
+  const { isConfirmed } = await modal(`確認要刪除餐點 "${row.name}" ?`)
+  if (isConfirmed === true) {
+    console.log(isConfirmed)
+    await foodStore.delete(row.id)
+  }
+}
+const onUpdateSwitch = async (foodId, value) => {
+  try {
+    console.log('onUpdateSwitch', value)
+    const res = await foodStore.updateSoldOut(foodId, value)
+  } catch (err) {
+    ng(err.message)
+    const target = foodStore.foods.find(e => +e.id === +foodId)
+    console.log(target.isSoldOut)
+  }
+}
 onBeforeRouteUpdate(async (to) => {
   pagination.value.page = 1
 })
