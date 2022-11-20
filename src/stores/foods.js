@@ -10,7 +10,10 @@ const foodForEdited = {
   info: '',
   price: 0,
   isSoldOut: false,
-  img: null
+  img: {
+    path: '',
+    file: null
+  }
 }
 Object.freeze(foodForEdited)
 export const useFoodStore = defineStore('food', {
@@ -31,7 +34,10 @@ export const useFoodStore = defineStore('food', {
       info: '',
       price: 0,
       isSoldOut: false,
-      img: null
+      img: {
+        path: '',
+        file: null
+      }
     }
   }),
   getters: {
@@ -74,7 +80,14 @@ export const useFoodStore = defineStore('food', {
     async fetchFood (foodId) {
       const shopId = useShopStore().shop.id
       const { food } = await api(`shops/${shopId}/foods/${foodId}`)
-      this.foodForEdited = { ...food }
+      console.log(food)
+      this.foodForEdited = {
+        ...food,
+        img: {
+          ...this.foodForEdited.img,
+          ...food.img
+        }
+      }
     },
     async createFood (payload) {
       const globalStore = useGlobalStore()
@@ -90,10 +103,22 @@ export const useFoodStore = defineStore('food', {
       if (globalStore.isLoading) return
       const {
         id: foodId,
-        name, info, price, isSoldOut, imgId
+        name, info, price, isSoldOut, img
       } = payload
-      const apiPayload = { foodId, name, info, price, isSoldOut, imgId }
       const shopId = useShopStore().shop.id
+      if (shopId == null) throw new Error('Update food, need shopId')
+      if (img.file !== null) {
+        const data = new FormData()
+        data.append('img', img.file)
+        if (img?.id) {
+          data.append('imgId', img.id)
+        }
+        const foodImg = await api.post(`shops/${shopId}/foods/${foodId}/imgs`, data
+          , { header: { 'Content-Type': 'multipart/form-data' } })
+        console.log({ foodImg })
+      }
+      if (payload) return
+      const apiPayload = { foodId, name, info, price, isSoldOut }
       if (shopId == null) throw new Error('Update food, need shopId')
       const food = await api.put(`shops/${shopId}/foods/${foodId}`, apiPayload)
       return food
@@ -103,7 +128,7 @@ export const useFoodStore = defineStore('food', {
       if (globalStore.isLoading) return
       try {
         const shopId = useShopStore().shop.id
-        await api.delete(`shops/${shopId}/foods/${foodId}`)
+        await api.delete(`shops / ${shopId} / foods / ${foodId}`)
         await this.fetchFoods(shopId, this.activeFoodTypeId)
         // this.foods = this.foods.filter(e => e.id !== foodId)
       } catch (err) {
@@ -123,7 +148,7 @@ export const useFoodStore = defineStore('food', {
       if (foodId == null || foodId === '') throw new Error('updateSoldOut:need foodId')
       const shopId = useShopStore().shop.id
       if (shopId == null) throw new Error('updateSoldOut: need shopId')
-      const { food } = await api.patch(`shops/${shopId}/foods/${foodId}`, { colName: 'isSoldOut', value })
+      const { food } = await api.patch(`shops / ${shopId} / foods / ${foodId}`, { colName: 'isSoldOut', value })
       if (!food) throw new Error('updateSoldOut')
 
       const target = this.foods.find(f => +f.id === +foodId)

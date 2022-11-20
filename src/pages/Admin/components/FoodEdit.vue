@@ -1,5 +1,10 @@
 <template lang="pug">
 form.form.g-3.needs-validation.row
+  .col-12
+    ImgUploader(
+      v-model:path="food.img.path"
+      v-model:file="food.img.file"
+    )
   .col-md-6
     label(for="name").form-label Name
     input#name.form-control(v-model="food.name" require)
@@ -31,6 +36,7 @@ form.form.g-3.needs-validation.row
 </template>
 
 <script setup>
+import ImgUploader from '@/components/ImgUploader.vue'
 import { useGlobalStore } from '@/stores/global'
 import ToastVue from '@/components/Toast.vue'
 import { storeToRefs } from 'pinia'
