@@ -6,6 +6,7 @@
 </template>
 
 <script setup>
+import { useSocket } from '@/utils/io'
 import { storeToRefs } from 'pinia'
 import { useGlobalStore } from '@/stores/global.js'
 import { onMounted } from 'vue'
@@ -14,6 +15,9 @@ import MyLoading from './components/MyLoading.vue'
 import Footer from './components/Footer.vue'
 const globalStore = useGlobalStore()
 const { isLoading } = storeToRefs(globalStore)
+const { socket } = useSocket()
+socket.on('msg', (payload) => { console.log(payload) })
+
 </script>
 
 <style lang="sass">
