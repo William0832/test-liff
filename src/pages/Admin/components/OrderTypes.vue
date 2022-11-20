@@ -4,15 +4,17 @@
     template(#status="{row}")
       td
         .d-flex.flex-column.gap-1
-          .btn.badge.bg-secondary(
-            @click="updateOrderStatus(row.id, 'pay')"
+          button.badge.bg-secondary.p-2(
+            :disabled="row.isRemove"
+            @click="updateOrderStatus(row.id, 'pay', row.payStatus)"
             :class="setBgClass(row.payStatus)"
           ) 💰{{row.payStatus}}
-          .btn.badge.bg-secondary(
-            @click="updateOrderStatus(row.id, 'prepare')"
+          button.badge.bg-secondary.p-2(
+            :disabled="row.isRemove"
+            @click="updateOrderStatus(row.id, 'prepare', row.prepareStatus)"
             :class="setBgClass(row.prepareStatus)"
           ) 🍳{{row.prepareStatus}}
-          button.btn.btn-outline-danger() cancel
+          button.btn.btn-outline-danger(@click="onDelete(row)") Remove
     template(#owner="{item}")
       td
         div {{item.name}}
@@ -28,7 +30,7 @@
 import dayjs from 'dayjs'
 import OrderFoodsCard from './OrderFoodsCard.vue'
 import MyTable from '@/components/MyTable.vue'
-
+import { modal } from '@/utils/swal'
 import { usePageStore } from '@/stores/page'
 import { useAdminOrderStore } from '@/stores/adminOrder'
 import { storeToRefs } from 'pinia'
@@ -67,11 +69,15 @@ const cols = [
     key: 'orderFoods'
   },
   {
-    label: 'Update',
-    key: 'updatedAt'
+    label: 'CreateAt',
+    key: 'createdAt'
   }
 ]
-
+const onDelete = async (order) => {
+  const { isConfirmed } = await modal(`確認要刪除訂單(ID: ${order.id}) ?`)
+  if (!isConfirmed) return
+  await adminOrderStore.deleteOrder(order.id)
+}
 const pageStore = usePageStore()
 pageStore.setOrder({ by: 'updatedAt', type: 'desc' })
 const { pagination } = storeToRefs(pageStore)
@@ -81,4 +87,8 @@ watchEffect(async () => {
 </script>
 
 <style lang="sass" scoped>
+.badge
+  width: 120px
+  cursor: pointer
+  font-size: .9rem
 </style>
