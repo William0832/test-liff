@@ -54,7 +54,7 @@ export const useOrderStore = defineStore('order', {
   actions: {
     async getUser () {
       const userStore = useUserStore()
-      await userStore.getLineUserData()
+      // await userStore.getLineUserData()
       const { name, id } = userStore.userData
       this.order.customer = {
         name: name || this.order.customer.name,
