@@ -28,7 +28,6 @@ export const useAdminOrderStore = defineStore('adminOrder', {
       }],
     adminOrders: [],
     alerts: [
-      // { id: 1, type: 'new', info: '新訂單 $100', time: '2023-10-25 20:20:00', isRead: true },
       // { id: 2, type: 'new', info: '新訂單 $120', time: '2023-10-25 20:00:00', isRead: true }
     ]
   }),
@@ -125,8 +124,8 @@ export const useAdminOrderStore = defineStore('adminOrder', {
     },
     addSocketAlert (payload) {
       this.alerts = [
-        ...this.alerts,
-        { ...payload }
+        { ...payload },
+        ...this.alerts
       ]
     }
   }
