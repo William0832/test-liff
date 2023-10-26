@@ -11,7 +11,10 @@
     InfoCard(title="訂單資料")
       strong 訂單末4碼: {{ orderIdFinal4code }}
       .orderId 訂單號碼: {{ order?.id }}
-      .createdAt 訂單日期: {{order?.createdAt}}
+      .time 訂單日期: {{timeFormat(order?.createdAt)}}
+      .time 更新日期: {{timeFormat(order?.updatedAt)}}
+      .time.text-danger(v-if="order?.deletedAt")
+        | 刪除時間: {{ timeFormat(order?.deletedAt) }}
       .payStatus 付款狀態: {{ order?.payStatus }}
       .payMethod 付款方式: {{ order?.payMethod }}
       .prepareStatus 定單狀態: {{ order?.prepareStatus }}
@@ -29,14 +32,17 @@
       ) 返回
 </template>
 <script>
+import dayjs from 'dayjs'
 import InfoCard from '@/components/InfoCard.vue'
 import ProductsCard from '@/components/CardItems/ProductsCard.vue'
 import { onMounted, ref, computed } from 'vue'
 import { useOrderStore } from '@/stores/order'
 import { useRoute, useRouter } from 'vue-router'
+import { timeFormat } from '@/utils/utils'
 </script>
 
 <script setup>
+
 const orderStore = useOrderStore()
 const route = useRoute()
 const router = useRouter()

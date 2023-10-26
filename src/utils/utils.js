@@ -1,3 +1,4 @@
+import dayjs from 'dayjs'
 const moneyFormat = (money = 0, splitPosition = 3) => {
   let tempIndex = 0
   const textList = `${money}`.split('')
@@ -15,6 +16,7 @@ const moneyFormat = (money = 0, splitPosition = 3) => {
   }
   return result
 }
+const timeFormat = (time, format = 'YYYY-MM-DD HH:mm:ss') => time ? dayjs(time).format(format) : ''
 const useDebounce = (func, wait) => {
   let time
   return function (...args) {
@@ -26,4 +28,4 @@ const useDebounce = (func, wait) => {
     }, wait)
   }
 }
-export { moneyFormat, useDebounce }
+export { moneyFormat, useDebounce, timeFormat }
