@@ -117,6 +117,7 @@ export const useMenuStore = defineStore('menu', {
             : null,
           items: e.foods.map(e => ({
             id: e.id,
+            img: e.img?.path || null,
             typeId: e.foodTypeId,
             name: e.name,
             price: e.price,
@@ -128,7 +129,6 @@ export const useMenuStore = defineStore('menu', {
     async fetchFood (foodId) {
       const shopId = getShopId()
       const { food } = await api(`/shops/${shopId}/foods/${foodId}`)
-      console.log(food)
       this.showMenuFood = food
       return food
     },
@@ -136,7 +136,6 @@ export const useMenuStore = defineStore('menu', {
       const shopId = getShopId()
       this.addItems = []
       const { foods } = await api(`/shops/${shopId}/foodTypes/3/foods`)
-      console.log(foods)
       this.addItems = foods
         .map(e => ({
           id: e.id,

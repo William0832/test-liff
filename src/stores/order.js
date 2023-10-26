@@ -4,6 +4,8 @@ import api from '@/utils/api'
 import { useShopStore } from '@/stores/shop'
 import storage from '@/utils/storage'
 import { useUserStore } from './user'
+import { socket } from '@/utils/io'
+import { ng, ok } from '../utils/swal'
 
 const STORAGE_CART_NAME = 'ohiyo-cart'
 const defaultCart = {
@@ -12,7 +14,6 @@ const defaultCart = {
   bookingDate: null,
   totalPrice: 0
 }
-
 Object.freeze(defaultCart)
 
 export const useOrderStore = defineStore('order', {
@@ -30,6 +31,14 @@ export const useOrderStore = defineStore('order', {
         lineId: '',
         phone: ''
       }
+    },
+    orderInfo: {
+
+    },
+    historyOrder: {
+      orders: [],
+      cursorId: null,
+      isEmpty: false
     }
   }),
   getters: {
@@ -49,9 +58,33 @@ export const useOrderStore = defineStore('order', {
         if (special) result.push(`特別需求: ${special}`)
         return result
       }
+    },
+    sortCartItems: (state) => {
+      return state.cart.items.sort((a, b) => a.type.localeCompare(b.type))
     }
   },
   actions: {
+    async fetchHistoryOrders ({ userId, take = 5, cursorId }) {
+      if (this.historyOrder.isEmpty) return
+      const payload = {
+        userId,
+        take,
+        cursorId: cursorId || this.historyOrder.cursorId
+      }
+      const { orders } = await api.post('/orders/history', payload)
+      if (orders.length === 0) {
+        ng('沒有更多資料了')
+      }
+      if (orders.length === 0 && this.historyOrder.orders === 0) {
+        this.historyOrder = { ...this.historyOrder, isEmpty: true }
+        return
+      }
+      this.historyOrder = {
+        orders: [...this.historyOrder.orders, ...orders],
+        cursorId: [...orders].pop()?.id || this.historyOrder.cursorId,
+        isEmpty: false
+      }
+    },
     async getUser () {
       const userStore = useUserStore()
       // await userStore.getLineUserData()
@@ -89,28 +122,36 @@ export const useOrderStore = defineStore('order', {
       storage.update(STORAGE_CART_NAME, this.cart)
     },
     addToCart (order) {
-      const { id, name, amount, option, special, totalPrice, type, price } = order
+      const { id, name, amount, option, special, totalPrice, type, price, spicyLevel } = order
       const singleItemPrice = totalPrice / amount
       this.cart.totalPrice += totalPrice
       const checkOptionIsSame = (cartItem, option) => {
         const { type, spicyLevel, addItems } = cartItem
-        if (type === '飲料') return true
-        if (spicyLevel === (option?.spicyLevel || null)) return true
+        if (type === '飲料') {
+          option.spicyLevel = null
+          option.addItems = null
+          return true
+        }
+        if (spicyLevel !== (option?.spicyLevel || null)) return false
         const addItemsStr = JSON.stringify(option?.addItems.map(e => ({ id: e.id, name: e.name, price: e.price })) || null)
-        if (JSON.stringify(addItems) === addItemsStr) return true
-        return false
+        if (JSON.stringify(addItems) !== addItemsStr) return false
+        return true
       }
       const handleSmeOrder = ((order) => {
-        const cartOldItem = this.cart.items.find(e => e.itemId === id &&
-          e.itemPrice === singleItemPrice &&
-          e.special === special &&
-          checkOptionIsSame(e, option)
+        const cartOldItem = this.cart.items.find(
+          e => e.itemId === id &&
+            e.itemPrice === singleItemPrice &&
+            e.special === special &&
+            checkOptionIsSame(e, option)
         )
         if (!cartOldItem) return false
         cartOldItem.amount += amount
         return true
       })(order)
-      if (handleSmeOrder) return
+      if (handleSmeOrder) {
+        storage.update(STORAGE_CART_NAME, this.cart)
+        return
+      }
       this.cart.items.push({
         cartId: uid(),
         price,
@@ -120,9 +161,23 @@ export const useOrderStore = defineStore('order', {
         type,
         itemPrice: singleItemPrice,
         addItems: option?.addItems.map(e => ({ id: e.id, name: e.name, price: e.price })) || null,
-        spicyLevel: option?.spicyLevel || null,
+        spicyLevel: type === '飲料' ? null : option?.spicyLevel,
         special
       })
+      storage.update(STORAGE_CART_NAME, this.cart)
+    },
+    updateCart (cartId, order) {
+      const { amount, option, special, totalPrice, type } = order
+      const target = this.cart.items.find(e => e.cartId === cartId)
+      const singleItemPrice = totalPrice / amount
+
+      this.cart.totalPrice += amount * (singleItemPrice - target.itemPrice)
+      target.amount = amount
+      target.special = special
+      target.itemPrice = singleItemPrice
+      target.addItems = option?.addItems.map(e => ({ id: e.id, name: e.name, price: e.price })) || null
+      target.spicyLevel = type === '飲料' ? null : option?.spicyLevel
+
       storage.update(STORAGE_CART_NAME, this.cart)
     },
     async confirmOrder () {
@@ -131,9 +186,32 @@ export const useOrderStore = defineStore('order', {
         cart: this.cart,
         shopId: useShopStore().shop.id
       }
-
-      const res = await api.post('/orders', payload)
-      console.log(res)
+      const { order } = await api.post('/orders', payload)
+      if (order !== null) {
+        this.removeCart()
+        socket.emit('MSG', {
+          type: 'new',
+          id: order.id,
+          value: `新訂單 $${order.totalPrice}`,
+          isRead: false,
+          time: new Date()
+        })
+      }
+      return order
+    },
+    async fetchOrder (id) {
+      const { order } = await api.get(`/orders/${id}`)
+      this.orderInfo = order
+      return order
+    },
+    async deleteOrder (id, index) {
+      const { order } = await api.delete(`/orders/${id}`)
+      this.historyOrder.orders[index].deletedAt = order.deletedAt
+      ok('訂單已刪除！')
+    },
+    removeCart () {
+      this.cart = { ...defaultCart }
+      storage.update(STORAGE_CART_NAME, this.cart)
     }
   }
 })

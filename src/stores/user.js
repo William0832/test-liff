@@ -8,7 +8,10 @@ export const useUserStore = defineStore('user', () => {
   const userData = ref({
     id: '',
     name: '',
-    imgUrl: ''
+    imgUrl: '',
+    orderIds: {
+      // unConfirm, confirmed, unPay, Payed, preparing, done
+    }
   })
   const isInClient = computed(() => liff.isInClient())
   const getLineUserData = async () => {

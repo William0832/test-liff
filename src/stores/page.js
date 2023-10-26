@@ -23,7 +23,7 @@ export const usePageStore = defineStore('page', () => {
   const setMax = (total) => {
     pagination.value.max = !total ? 1 : Math.ceil(total / defaultTake.value)
   }
-  const setOrder = ({ by = 'id', type = 'asc' }) => {
+  const setOrderBy = ({ by = 'id', type = 'asc' }) => {
     pagination.value.orderBy = by
     pagination.value.orderType = type
   }
@@ -31,6 +31,6 @@ export const usePageStore = defineStore('page', () => {
     pagination,
     skip,
     setMax,
-    setOrder
+    setOrderBy
   }
 })

@@ -3,12 +3,22 @@ import api from '@/utils/api'
 import { useShopStore } from '@/stores/shop'
 import { usePageStore } from '@/stores/page'
 import dayjs from 'dayjs'
+const defaultFilter = {
+  userName: '',
+  food: '',
+  payStatus: '',
+  prepareStatus: ''
+}
 export const useAdminOrderStore = defineStore('adminOrder', {
   state: () => ({
+    selectedList: [],
+    filter: {
+      ...defaultFilter
+    },
     orderTypes: [
       {
         id: 1,
-        name: 'current'
+        name: 'today'
       }, {
         id: 2,
         name: 'history'
@@ -16,11 +26,48 @@ export const useAdminOrderStore = defineStore('adminOrder', {
         id: 3,
         name: 'remove'
       }],
-    adminOrders: []
+    adminOrders: [],
+    alerts: [
+      // { id: 1, type: 'new', info: '新訂單 $100', time: '2023-10-25 20:20:00', isRead: true },
+      // { id: 2, type: 'new', info: '新訂單 $120', time: '2023-10-25 20:00:00', isRead: true }
+    ]
   }),
   getters: {
+    isRowSelected () {
+      return (id) => this.selectedList.includes(id)
+    },
+    isAllSelected () {
+      return this.selectedList.length === 0
+        ? false
+        : this.adminOrders.every(o => this.selectedList.includes(o.id))
+    },
+    selectedLen () {
+      return this.selectedList.length
+    },
+    newAlertLength () {
+      return this.alerts.filter(e => e.isRead === false).length
+    }
   },
   actions: {
+    resetSelected () {
+      this.selectedList = []
+    },
+    selectedToggle (id) {
+      if (this.selectedList.includes(id)) {
+        this.selectedList = this.selectedList.filter(e => e !== id)
+        return
+      }
+      this.selectedList.push(id)
+    },
+    allSelectedToggle () {
+      if (this.isAllSelected) {
+        this.selectedList = this.selectedList.filter(id =>
+          !this.adminOrders.map(e => e.id).includes(id))
+        return
+      }
+      const listSet = new Set([...this.selectedList, ...this.adminOrders.map(e => e.id)])
+      this.selectedList = [...listSet]
+    },
     async updateOrderStatus (id, type, oldStatus) {
       const getStatus = (type, status) => {
         const mixStr = `${type}-${status}`
@@ -45,7 +92,7 @@ export const useAdminOrderStore = defineStore('adminOrder', {
       const target = this.adminOrders.find(e => e.id === id)
       target[key] = status
     },
-    async fetchAdminOrders (type = 'current') {
+    async fetchAdminOrders (type = 'today') {
       const shopId = useShopStore().shop.id
       const pageStore = usePageStore()
       const { orderBy, orderType, take } = pageStore.pagination
@@ -54,7 +101,8 @@ export const useAdminOrderStore = defineStore('adminOrder', {
         orderBy,
         orderType,
         take,
-        skip: pageStore.skip
+        skip: pageStore.skip,
+        ...this.filter
       }
       const { total, orders } = await api('/orders', { params })
       pageStore.setMax(total)
@@ -63,17 +111,23 @@ export const useAdminOrderStore = defineStore('adminOrder', {
         ownerName: o?.owner?.name,
         ownerPhone: o?.owner?.phone,
         isRemove: !!o.deletedAt,
-        createdAt: dayjs(o.createdAt).format('YYYY-MM-DD HH:mm:ss')
+        createdAt: dayjs(o.createdAt).format('YYYY-MM-DD HH:mm:ss'),
+        selected: false
       }))
-    },
-    async fetchOrder (shopId, orderId) {
-      // const { foods } = await api(`shops/${shopId}/foodTypes/${foodTypeId}/foods`)
-      // this.foods = foods
     },
     async deleteOrder (id, timeType) {
       const { order } = await api.delete(`/orders/${id}`)
       if (!order) return
       await this.fetchAdminOrders(timeType)
+    },
+    resetFilter () {
+      this.filter = { ...defaultFilter }
+    },
+    addSocketAlert (payload) {
+      this.alerts = [
+        ...this.alerts,
+        { ...payload }
+      ]
     }
   }
 })

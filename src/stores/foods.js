@@ -1,10 +1,12 @@
+import { ref } from 'vue'
 import { defineStore } from 'pinia'
 import api from '@/utils/api'
 import { useShopStore } from './shop'
+import { usePageStore } from './page'
 import { debug, ng } from '../utils/swal'
 import { useGlobalStore } from './global'
-import { useRouter } from 'vue-router'
-const foodForEdited = {
+
+const defaultFoodForEdited = {
   foodTypeId: null,
   name: '',
   info: '',
@@ -15,16 +17,9 @@ const foodForEdited = {
     file: null
   }
 }
-Object.freeze(foodForEdited)
+Object.freeze(defaultFoodForEdited)
 export const useFoodStore = defineStore('food', {
   state: () => ({
-    pagination: {
-      take: 5,
-      max: 1,
-      page: 1,
-      orderBy: 'id',
-      orderType: 'asc'
-    },
     foods: [],
     foodTypes: [],
     activeFoodTypeId: null,
@@ -40,19 +35,10 @@ export const useFoodStore = defineStore('food', {
       }
     }
   }),
-  getters: {
-    skip (state) {
-      const { page, take } = state.pagination
-      return take * (page - 1)
-    },
-    take (state) {
-      return state.pagination.take
-    }
-  },
   actions: {
     initFoodForEdited () {
       this.foodForEdited = {
-        ...foodForEdited
+        ...defaultFoodForEdited
       }
     },
     async fetchFoodTypes (shopId) {
@@ -65,13 +51,13 @@ export const useFoodStore = defineStore('food', {
     },
     async fetchFoods (shopId, foodTypeId) {
       try {
-        const { take, orderBy, orderType } = this.pagination
-        const query = Object.entries({ take, skip: this.skip, orderBy, orderType })
-          .map(([k, v]) => `${k}=${v}`).join('&')
-        const url = `shops/${shopId}/foodTypes/${foodTypeId}/foods?${query}`
-        const { foods, total } = await api(url)
+        const pageStore = usePageStore()
+        const { take, orderBy, orderType } = pageStore.pagination
+        const params = { take, skip: pageStore.skip, orderBy, orderType }
+        const url = `shops/${shopId}/foodTypes/${foodTypeId}/foods`
+        const { foods, total } = await api(url, { params })
         this.activeFoodTypeId = +foodTypeId
-        this.pagination.max = Math.ceil(total / this.pagination.take)
+        pageStore.setMax(total)
         this.foods = foods
       } catch (err) {
         ng('no fetchFoods')
@@ -80,11 +66,11 @@ export const useFoodStore = defineStore('food', {
     async fetchFood (foodId) {
       const shopId = useShopStore().shop.id
       const { food } = await api(`shops/${shopId}/foods/${foodId}`)
-      console.log(food)
+
       this.foodForEdited = {
         ...food,
         img: {
-          ...this.foodForEdited.img,
+          ...defaultFoodForEdited.img,
           ...food.img
         }
       }
@@ -117,20 +103,18 @@ export const useFoodStore = defineStore('food', {
           , { header: { 'Content-Type': 'multipart/form-data' } })
         console.log({ foodImg })
       }
-      if (payload) return
       const apiPayload = { foodId, name, info, price, isSoldOut }
       if (shopId == null) throw new Error('Update food, need shopId')
       const food = await api.put(`shops/${shopId}/foods/${foodId}`, apiPayload)
       return food
     },
-    async delete (foodId) {
+    async deleteFood (foodId) {
       const globalStore = useGlobalStore()
       if (globalStore.isLoading) return
       try {
         const shopId = useShopStore().shop.id
         await api.delete(`shops / ${shopId} / foods / ${foodId}`)
         await this.fetchFoods(shopId, this.activeFoodTypeId)
-        // this.foods = this.foods.filter(e => e.id !== foodId)
       } catch (err) {
         console.log(err)
         ng('delete error')
@@ -148,7 +132,7 @@ export const useFoodStore = defineStore('food', {
       if (foodId == null || foodId === '') throw new Error('updateSoldOut:need foodId')
       const shopId = useShopStore().shop.id
       if (shopId == null) throw new Error('updateSoldOut: need shopId')
-      const { food } = await api.patch(`shops / ${shopId} / foods / ${foodId}`, { colName: 'isSoldOut', value })
+      const { food } = await api.patch(`shops/${shopId}/foods/${foodId}`, { colName: 'isSoldOut', value })
       if (!food) throw new Error('updateSoldOut')
 
       const target = this.foods.find(f => +f.id === +foodId)
