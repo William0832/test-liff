@@ -67,7 +67,7 @@ export const useAdminOrderStore = defineStore('adminOrder', {
       const listSet = new Set([...this.selectedList, ...this.adminOrders.map(e => e.id)])
       this.selectedList = [...listSet]
     },
-    async updateOrderStatus (id, type, oldStatus) {
+    async updateOrderStatus (id, type, oldStatus, moneyPayload) {
       const getStatus = (type, status) => {
         const mixStr = `${type}-${status}`
         switch (mixStr) {
@@ -83,10 +83,12 @@ export const useAdminOrderStore = defineStore('adminOrder', {
       }
       const key = type === 'pay' ? 'payStatus' : 'prepareStatus'
       const status = getStatus(type, oldStatus)
-      const { order } = await api.patch(`/orders/${id}`, {
+      let payload = {
         key,
         status
-      })
+      }
+      if (moneyPayload) payload = { ...payload, ...moneyPayload }
+      const { order } = await api.patch(`/orders/${id}`, payload)
       if (order == null) throw new Error('updateOrderStatus')
       const target = this.adminOrders.find(e => e.id === id)
       target[key] = status

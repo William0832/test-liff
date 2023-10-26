@@ -153,20 +153,21 @@ const onPay = async (row) => {
       }
     })
     if (!value) return
-    const receivedMoney = +value
-    const changes = receivedMoney - +totalPrice
-    await updateOrderStatus(row.id, 'pay', row.payStatus)
+    const receiveMoney = +value
+    const change = receiveMoney - +totalPrice
+    const moneyPayload = { receiveMoney, change }
+    await updateOrderStatus(row.id, 'pay', row.payStatus, moneyPayload)
 
     await modal('已確認付款', {
       showConfirmButton: false,
       html: `
         <div class="list-group">
           <div class="list-group-item d-flex justify-content-between">實收: 
-            <span>$${moneyFormat(receivedMoney)}</span> </div>
+            <span>$${moneyFormat(receiveMoney)}</span> </div>
           <div class="list-group-item d-flex justify-content-between">商品: 
             <span>$${moneyFormat(totalPrice)}</span></div>
           <div class="list-group-item d-flex justify-content-between">找零:
-            <span>$${moneyFormat(changes)}</span>
+            <span>$${moneyFormat(change)}</span>
             </div>
         </div>
       `
