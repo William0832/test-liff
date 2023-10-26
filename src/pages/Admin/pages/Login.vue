@@ -20,7 +20,7 @@ const admin = reactive({
 })
 const login = async () => {
   await globalStore.login(admin.account, admin.psw)
-  router.push({ name: 'OrderTypes', params: { orderType: 'current' } })
+  router.push({ name: 'OrderTypes', params: { orderType: 'today' } })
 }
 onMounted(() => {
   globalStore.logout()

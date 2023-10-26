@@ -11,7 +11,6 @@ router-view
 <script setup>
 import { useFoodStore } from '@/stores/foods'
 import { storeToRefs } from 'pinia'
-import { onMounted } from 'vue'
 
 const foodStore = useFoodStore()
 const { foodTypes } = storeToRefs(foodStore)

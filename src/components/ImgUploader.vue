@@ -1,11 +1,12 @@
 <template lang="pug">
 .img-uploader(@click="uploadFile" :class="{empty: path === ''}")
   .img-box
-    img(:src="path", alt="upload food image")
+    img(:src="path", alt="upload food image" crossOrigin="anonymous")
     input(
       type="file"
       accept="image/*"
       @input.prevent.stop="inputFile"
+
     )
 </template>
 

@@ -8,7 +8,9 @@
     .p-1.fw-semibold.text-secondary {{ info }}
 
   .col.d-flex.align-items-center.justify-content-end
-    img.img-fluid.rounded(src="https://fakeimg.pl/200/", alt="", srcset="")
+    img.img-fluid.rounded.food-img(:src="img || 'images/noImg.png'", alt="", srcset="")
+
+    //- img.img-fluid.rounded(src="https://fakeimg.pl/200/", alt="", srcset="")
 </template>
 
 <script setup>
@@ -16,6 +18,10 @@ const props = defineProps({
   id: {
     type: [Number, String],
     required: true
+  },
+  img: {
+    type: String,
+    default: () => ''
   },
   info: {
     type: String,
@@ -32,4 +38,8 @@ const props = defineProps({
 <style lang="sass">
 .item
   cursor: pointer
+.food-img
+  object-fit: cover
+  width: 150px
+  height: 100px
 </style>

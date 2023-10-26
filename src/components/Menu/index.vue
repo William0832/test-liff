@@ -38,4 +38,6 @@ const onActiveTab = (index) => {
 <style lang="sass">
 .menu
   flex: 1
+.nav-link
+  cursor: pointer
 </style>

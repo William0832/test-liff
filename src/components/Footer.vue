@@ -2,23 +2,29 @@
 .action-box.position-sticky.bottom-0.p-3.bg-light(
   v-if="showFooter"
 )
-  button.btn.btn-primary.w-100.btn-order(
-    v-if="cartItemLen === 0"
-    @click="startToOrder"
-  ) 開始點餐
-  .d-flex.justify-content-between(v-else)
-    .price-box
+  .btns.d-flex.flex-column(v-if="cartItemLen === 0")
+    button.btn.btn-primary.m-1.w-100.btn-order(
+      v-if="cartItemLen === 0"
+      @click="startToOrder"
+    ) 開始點餐
+    button.btn.btn-primary.m-1.w-100(
+      @click="$router.push('/historyOrder')"
+    ) 歷史訂單
+
+  .row.d-flex.justify-content-between(v-else)
+    .price-box.col-12.col-sm-3.d-flex.align-items-center.justify-content-between
       .label 總金額
-      .price.fw-bolder.py-1.text-center $ {{ cartTotalMoney }}
-    .btns.d-flex.align-items-center
+      .price.fw-bolder.py-1 $ {{ cartTotalMoney }}
+    .btns.d-flex.align-items-center.justify-content-end.col-12.col-sm-auto
       button.btn.btn-secondary.me-2(
         v-if="$route.name !== 'Home'"
         @click="$router.push('/')"
       ) 繼續點餐
       button.btn.btn-primary(@click="submit")
-        span(v-if="isConfirmOrder") 結帳
+        span(v-if="isConfirmOrder") 送出訂單
         span(v-else) 確認餐點
         .badge.text-bg-light.ms-1 {{ cartItemLen }}
+      button.btn.btn-primary.ms-1(@click="$router.push('/historyOrder')") 歷史訂單
 </template>
 
 <script setup>
@@ -48,8 +54,9 @@ const startToOrder = () => {
 }
 const submit = async () => {
   if (isConfirmOrder.value) {
-    console.log('結帳')
-    orderStore.confirmOrder()
+    const order = await orderStore.confirmOrder()
+    const { id } = order
+    router.push({ name: 'OrderInfo', params: { orderId: id } })
     return
   }
   router.push({ name: 'ConfirmOrder' })

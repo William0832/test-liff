@@ -15,6 +15,7 @@
 </template>
 
 <script setup>
+import { useIntersectionObserver } from '@vueuse/core'
 import { useRouter } from 'vue-router'
 import { ref, computed, onBeforeUpdate, onMounted } from 'vue'
 import { useMenuStore } from '@/stores/menu'

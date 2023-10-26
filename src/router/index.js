@@ -4,10 +4,10 @@ import { useShopStore } from '../stores/shop'
 import { useMenuStore } from '../stores/menu'
 import { useGlobalStore } from '../stores/global'
 import { useFoodStore } from '../stores/foods'
-import { useAdminOrderStore } from '../stores/adminOrder'
-import { debug, ng, ok } from '../utils/swal'
+// import { useAdminOrderStore } from '../stores/adminOrder'
+import { ng } from '../utils/swal'
 import { useOrderStore } from '../stores/order'
-import { useUserStore } from '../stores/user'
+// import { useUserStore } from '../stores/user'
 const routes = [
   {
     path: '/',
@@ -38,12 +38,12 @@ const routes = [
       {
         path: '',
         name: 'Login',
-        component: () => import('@/pages/Admin/components/Login.vue')
+        component: () => import('@/pages/Admin/pages/Login.vue')
       },
       {
         path: 'foods',
         name: 'FoodTable',
-        component: () => import('@/pages/Admin/components/FoodTable.vue'),
+        component: () => import('@/pages/Admin/pages/FoodTable.vue'),
         redirect: () => ({ name: 'FoodTypeFoods', params: { foodTypeId: 1 } }),
         async beforeEnter (to, from) {
           const foodStore = useFoodStore()
@@ -53,7 +53,7 @@ const routes = [
           {
             path: ':foodTypeId',
             name: 'FoodTypeFoods',
-            component: () => import('@/pages/Admin/components/FoodTypeFoods.vue'),
+            component: () => import('@/pages/Admin/pages/FoodTypeFoods.vue'),
             async beforeEnter (to, from) {
               const { foodTypeId } = to.params
               if (isNaN(+foodTypeId)) {
@@ -66,13 +66,13 @@ const routes = [
               {
                 path: ':type',
                 name: 'FoodEdit',
-                component: () => import('@/pages/Admin/components/FoodEdit.vue'),
+                component: () => import('@/pages/Admin/pages/FoodEdit.vue'),
                 async beforeEnter (to, from) {
                   const { query, params } = to
-                  const { id } = query
+                  const { foodId } = query
                   const foodStore = useFoodStore()
-                  if (params.type === 'update' && id) {
-                    await foodStore.fetchFood(id)
+                  if (params.type === 'update' && foodId) {
+                    await foodStore.fetchFood(foodId)
                     return
                   }
                   if (params.type === 'create') {
@@ -86,16 +86,25 @@ const routes = [
         ]
       },
       {
-        path: 'orders',
+        path: 'orders/:orderId',
+        name: 'AdminOrderInfo',
+        component: () => import('@/pages/OrderInfo.vue')
+      },
+      {
+        path: 'orders/:orderId/edit',
+        name: 'AdminOrderEdit',
+        component: () => import('@/pages/OrderInfo.vue')
+      },
+      {
+        path: 'order-type',
         name: 'OrderManager',
-        component: () => import('@/pages/Admin/components/OrderManager.vue'),
-        redirect: () => ({ name: 'OrderTypes', params: { orderType: 'current' } }),
-
+        component: () => import('@/pages/Admin/pages/OrderManager.vue'),
+        redirect: () => ({ name: 'OrderTypes', params: { orderType: 'today' } }),
         children: [
           {
             path: ':orderType',
             name: 'OrderTypes',
-            component: () => import('@/pages/Admin/components/OrderTypes.vue')
+            component: () => import('@/pages/Admin/pages/OrderTypes.vue')
           }
         ]
       }
@@ -117,7 +126,17 @@ const routes = [
   {
     path: '/confirmOrder',
     name: 'ConfirmOrder',
-    component: () => import('@/pages/ConfirmOrder.vue')
+    component: () => import('@/pages/ConfirmOrder/ConfirmOrder.vue')
+  },
+  {
+    path: '/orderInfo/:orderId',
+    name: 'OrderInfo',
+    component: () => import('@/pages/OrderInfo.vue')
+  },
+  {
+    path: '/historyOrder',
+    name: 'HistoryOrder',
+    component: () => import('@/pages/HistoryOrders/HistoryOrders.vue')
   }
 ]
 const router = createRouter({

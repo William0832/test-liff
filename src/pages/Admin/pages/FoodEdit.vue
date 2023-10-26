@@ -26,25 +26,24 @@ form.form.g-3.needs-validation.row
     label(for="info").form-label Info.
     textarea#info.form-control(v-model="food.info")
   .col-12
-    .btns.d-flex.justify-content-end.gap-2
+    .btns.d-flex.justify-content-end.gap-2.mb-2
       button.btn.btn-secondary(@click="$router.go(-1)") Cancel
       button.btn.btn-primary(
         :class="{disabled:isLoading}"
         @click.prevent="onSubmit") Submit
-  template(v-if="msg")
-    ToastVue(:msg="msg")
+  //- template(v-if="msg")
+  //-   ToastVue(:msg="msg")
 </template>
 
 <script setup>
 import ImgUploader from '@/components/ImgUploader.vue'
 import { useGlobalStore } from '@/stores/global'
-import ToastVue from '@/components/Toast.vue'
+// import ToastVue from '@/components/Toast.vue'
 import { storeToRefs } from 'pinia'
 import { reactive, ref, computed, onMounted } from 'vue'
 import { useRoute, useRouter } from 'vue-router'
 import { useFoodStore } from '@/stores/foods'
 import { ng } from '@/utils/swal'
-const msg = ref('')
 const globalStore = useGlobalStore()
 const { isLoading } = storeToRefs(globalStore)
 const foodStore = useFoodStore()

@@ -1,5 +1,5 @@
 <template lang="pug">
-.container
+.container-fluid
   h4.mt-2.mb-0 訂單管理
   nav.nav
     router-link.nav-link(
