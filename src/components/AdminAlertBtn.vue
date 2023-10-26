@@ -45,7 +45,7 @@ const onShowInfo = () => {
 }
 const gotoOrder = (id, index) => {
   alerts.value[index].isRead = true
-  router.push({ name: 'OrderInfo', params: { orderId: id } })
+  router.push({ name: 'AdminOrderInfo', params: { orderId: id } })
 }
 const handelClick = (e) => {
   const btn = e.target.closest('.btn-alert')
