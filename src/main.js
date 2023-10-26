@@ -8,7 +8,7 @@ import { library } from '@fortawesome/fontawesome-svg-core'
 /* import font awesome icon component */
 import { FontAwesomeIcon } from '@fortawesome/vue-fontawesome'
 /* import specific icons */
-import { faPhone, faAngleUp, faPlus, faMinus, faXmark, faCalendarDay, faBell } from '@fortawesome/free-solid-svg-icons'
+import { faPhone, faAngleUp, faPlus, faMinus, faXmark, faCalendarDay, faBell, faChevronUp, faChevronDown } from '@fortawesome/free-solid-svg-icons'
 import { faClock as farClock, faMap as farMap } from '@fortawesome/free-regular-svg-icons'
 import VueSweetalert2 from 'vue-sweetalert2'
 import 'sweetalert2/dist/sweetalert2.min.css'
@@ -19,7 +19,9 @@ library.add(
   farMap, faPhone, farClock,
   faAngleUp, faPlus, faMinus,
   faXmark, faCalendarDay,
-  faBell
+  faBell,
+  faChevronUp,
+  faChevronDown
 )
 
 app.component('Icon', FontAwesomeIcon)
