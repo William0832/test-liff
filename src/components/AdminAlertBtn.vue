@@ -3,10 +3,14 @@ button.btn.btn-secondary.position-relative.mb-1.btn-alert(@click="onShowInfo")
   Icon(:icon="['fas', 'fa-bell']")
   span.position-absolute.top-0.start-100.translate-middle.badge.rounded-pill.bg-danger(v-if="newAlertLength >0") {{ newAlertLength }}
 .toast-container.position-fixed.top-0.end-0.p-3
-  .toast(role="alert", aria-live="assertive", aria-atomic="true" ref="toastInfoEl")
+  .toast(ref="toastInfoEl")
     .toast-header
       strong.me-auto 訊息
-      button.btn-close(type="button", data-bs-dismiss="toast", aria-label="Close")
+      button.btn-close(
+        type="button"
+        data-bs-dismiss="toast"
+        aria-label="Close"
+      )
     .toast-body
       template(v-if="newAlertLength === 0")
         .text-center.text-secondary 沒有新訊息
@@ -14,10 +18,12 @@ button.btn.btn-secondary.position-relative.mb-1.btn-alert(@click="onShowInfo")
         li.list-group-item.d-flex.justify-content-between.pointer(
           v-for="(item,index) in alerts"
           :key="item.id"
+          :class="item.isRead ? 'bg-white': 'bg-secondary text-white'"
           @click="gotoOrder(item.id, index)"
         )
           | {{ item.value }}
-          small.text-secondary {{ dayjs().to(dayjs(new Date())) }}
+          small(:class="item.isRead ? 'text-secondary': 'text-white'")
+            | {{ dayjs().to(dayjs(new Date())) }}
 </template>
 
 <script setup>
