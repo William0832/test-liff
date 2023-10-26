@@ -28,7 +28,7 @@
         @click=""
       ) 編輯
       button.btn.btn-secondary(
-        @click="()=>router.go(-1)"
+        @click="gobBack"
       ) 返回
 </template>
 <script>
@@ -98,6 +98,13 @@ const collapses = ref({
 })
 const handelCollapse = () => {
   collapses.value.product = !collapses.value.product
+}
+const gobBack = () => {
+  if (route.path.includes('admin')) {
+    router.go(-1)
+    return
+  }
+  router.push('/')
 }
 onMounted(async () => {
   const { orderId: id } = route.params
