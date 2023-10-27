@@ -8,6 +8,14 @@ Teleport(to="body")
 
 <script setup>
 import Navbar from './pages/Navbar.vue'
+import { socket } from '@/utils/io'
+import { useAdminOrderStore } from '@/stores/adminOrder'
+const adminStore = useAdminOrderStore()
+
+socket.on('MSG', (payload) => {
+  adminStore.addSocketAlert(payload)
+})
+
 </script>
 
 <style lang="sass" scoped>
