@@ -21,7 +21,7 @@
     InfoCard(title="顧客資料")
       .name 顧客姓名: {{ order?.owner.name }}
       .phone 顧客電話: {{ order?.owner.phone }}
-      .lineId Line: {{ order?.owner.lineId }}
+      //- .lineId Line: {{ order?.owner.lineId }}
     .btns.d-flex.gap-2.justify-content-end.mt-3
       button.btn.btn-primary(
         v-if="isEdit"
