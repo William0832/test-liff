@@ -8,8 +8,7 @@ Menu(
 
 <script setup>
 import { storeToRefs } from 'pinia'
-import { onMounted, reactive } from 'vue'
-// import liff from '@line/liff'
+import { onMounted } from 'vue'
 import { useShopStore } from '@/stores/shop'
 import { useMenuStore } from '@/stores/menu'
 import { useOrderStore } from '@/stores/order'

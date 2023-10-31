@@ -20,8 +20,10 @@ import TheRadios from '@/components/TheRadios.vue'
 import { payStatusOptions, prepareStatusOptions } from '@/assets/database/options'
 import { useAdminOrderStore } from '@/stores/adminOrder'
 import { storeToRefs } from 'pinia'
-import { computed, ref } from 'vue'
+import { computed, ref, watchEffect } from 'vue'
 import { useRoute } from 'vue-router'
+import { useWindowSize } from '@vueuse/core'
+const { width } = useWindowSize()
 const route = useRoute()
 const adminOrderStore = useAdminOrderStore()
 const InputTimeType = computed(() =>
@@ -33,6 +35,10 @@ const toggleCollapse = () => {
   collapses.value = !collapses.value
   if (!collapses.value) adminOrderStore.resetFilter()
 }
+watchEffect(() => {
+  if (width.value <= 768) collapses.value = true
+  else collapses.value = false
+})
 </script>
 
 <style lang="sass" scoped>
