@@ -1,32 +1,35 @@
 import { createRouter, createWebHashHistory } from 'vue-router'
-import Home from '@/pages/Home.vue'
+import Home from '@/pages/Home/Home.vue'
 import { useShopStore } from '../stores/shop'
 import { useMenuStore } from '../stores/menu'
 import { useGlobalStore } from '../stores/global'
 import { useFoodStore } from '../stores/foods'
 // import { useAdminOrderStore } from '../stores/adminOrder'
-import { ng } from '../utils/swal'
+import { ng, ok } from '../utils/swal'
 import { useOrderStore } from '../stores/order'
-// import { useUserStore } from '../stores/user'
+import { useUserStore } from '../stores/user'
 const routes = [
   {
     path: '/',
     name: 'Home',
     component: Home,
-    beforeEnter: async (to, from, next) => {
-      // const globalStore = useGlobalStore()
-      // const userStore = useUserStore()
+    beforeEnter: async (to, from) => {
+      const globalStore = useGlobalStore()
+      const userStore = useUserStore()
       useOrderStore().readCart()
       try {
-        // await userStore.getLineUserData()
-        // const { name } = userStore.userData
-        // if (name) ok(`Welcome ${name}`)
+        if (!import.meta.env.DEV) {
+          await userStore.getLineUserData()
+        }
+        const { name } = userStore.userData
+        if (name) ok(`Welcome ${name}`)
         await Promise.all([
           useShopStore().fetchShop(1),
           useMenuStore().fetchFoodsByTypes()
         ])
-        next()
+        return true
       } catch (err) {
+        console.warn(err)
         ng('發生錯誤')
       }
     }
