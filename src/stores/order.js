@@ -181,6 +181,14 @@ export const useOrderStore = defineStore('order', {
       storage.update(STORAGE_CART_NAME, this.cart)
     },
     async confirmOrder () {
+      if (this.order.customer.name === '') {
+        ng('請輸入姓名！')
+        return
+      }
+      if (this.order.customer.phone === '') {
+        ng('請輸入手機號碼！')
+        return
+      }
       const payload = {
         customer: this.order.customer,
         cart: this.cart,
