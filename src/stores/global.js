@@ -11,13 +11,14 @@ export const useGlobalStore = defineStore('global', {
       type: 'ok',
       msg: ''
     }
-
   }),
   getters: {
   },
   actions: {
     async login (account, psw) {
-      if (account !== 'admin' || psw !== 'admin') throw new Error('login fail')
+      if (account !== 'admin' ||
+        psw !== import.meta.env.VITE_ADMIN_PSW
+      ) throw new Error('login fail')
       this.isAuth = true
     },
     logout () {
