@@ -1,21 +1,24 @@
 <template lang="pug">
-ImgWall(:imgs="shop.imgs")
-ShopInfo(v-bind="shop", :nowState="nowState")
-Menu(
-  :showMenuTypes="showMenuTypes"
-)
+#home
+  TopNav
+  ImgWall(:imgs="shop.imgs")
+  ShopInfo(v-bind="shop", :nowState="nowState")
+  Menu(
+    :showMenuTypes="showMenuTypes"
+  )
 </template>
 
 <script setup>
+import TopNav from '@/components/TopNav.vue'
 import { storeToRefs } from 'pinia'
 import { onMounted } from 'vue'
 import { useShopStore } from '@/stores/shop'
 import { useMenuStore } from '@/stores/menu'
 import { useOrderStore } from '@/stores/order'
 
-import ShopInfo from '@/components/ShopInfo.vue'
-import ImgWall from '@/components/ImgWall.vue'
-import Menu from '@/components/Menu/index.vue'
+import ShopInfo from './components/ShopInfo.vue'
+import ImgWall from './components/ImgWall.vue'
+import Menu from './components/Menu/index.vue'
 
 const shopStore = useShopStore()
 const menuStore = useMenuStore()

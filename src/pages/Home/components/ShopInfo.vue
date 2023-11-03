@@ -1,6 +1,6 @@
 <template lang="pug">
 .shop-info.p-3
-  .title.mb-1.h3  {{ name }}
+  .title.mb-1.h3.fw-bold  {{ name }}
   .info.p-2  {{ info }}
   .address.d-flex.align-items-center.p-2
     Icon(:icon="['far', 'fa-map']").me-3
@@ -11,7 +11,7 @@
   .active-time.p-2.d-flex.justify-content-between
     .start.d-flex.align-items-center
       Icon(:icon="['far', 'fa-clock']").pe-3
-      .value 營業時間
+      .value 營業時間(...參考就好)
     .end.d-flex.align-items-center.text-secondary(:class="{ 'text-success': isOpen(nowState) }")
       .value.pe-2 {{ nowState }}
       i.icon-angle(

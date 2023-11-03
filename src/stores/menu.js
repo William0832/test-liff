@@ -50,11 +50,8 @@ export const useMenuStore = defineStore('menu', {
     showMenuFood: null,
     addItems: [],
     currentTabIndex: 0,
-    scrollEls: {
-      menu: null,
-      items: []
-    },
-    spicyLevels
+    spicyLevels,
+    menuCurrentActiveId: null
   }),
   getters: {
     getPrice () {
@@ -84,10 +81,7 @@ export const useMenuStore = defineStore('menu', {
         option
       }
     },
-    showMenuTypes: (state) => state.type?.filter(e => e.isShowOnTabs),
-    menuItemEl: (state) => state.scrollEls.items.length !== 0
-      ? state.scrollEls.items[state.currentTabIndex]
-      : null
+    showMenuTypes: (state) => state.type?.filter(e => e.isShowOnTabs)
   },
   actions: {
     async fetchFoodsByTypes () {
@@ -145,15 +139,6 @@ export const useMenuStore = defineStore('menu', {
           isSoldOut: e.isSoldOut
         }))
       return foods
-    },
-    registerEl (type, el) {
-      this.scrollEls[type] = el
-    },
-    scrollToShow (type) {
-      const el = type === 'menu'
-        ? this.scrollEls.menu
-        : this.menuItemEl
-      el.scrollIntoView({ behaver: 'smooth' })
     }
   }
 })

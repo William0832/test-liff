@@ -20,7 +20,7 @@
       .prepareStatus 定單狀態: {{ order?.prepareStatus }}
     InfoCard(title="顧客資料")
       .name 顧客姓名: {{ order?.owner.name }}
-      .phone 顧客電話: {{ order?.owner.phone }}
+      .phone 顧客手機號碼: {{ order?.owner.phone }}
       //- .lineId Line: {{ order?.owner.lineId }}
     .btns.d-flex.gap-2.justify-content-end.mt-3
       button.btn.btn-primary(

@@ -10,7 +10,6 @@
   .col.d-flex.align-items-center.justify-content-end
     img.img-fluid.rounded.food-img(:src="img || 'images/noImg.png'", alt="", srcset="")
 
-    //- img.img-fluid.rounded(src="https://fakeimg.pl/200/", alt="", srcset="")
 </template>
 
 <script setup>

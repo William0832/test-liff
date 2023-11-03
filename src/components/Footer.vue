@@ -1,5 +1,5 @@
 <template lang="pug">
-.action-box.position-sticky.bottom-0.p-3.bg-light(
+.action-box.sticky-bottom.p-3.bg-light(
   v-if="showFooter"
 )
   .btns.d-flex.flex-column(v-if="cartItemLen === 0")

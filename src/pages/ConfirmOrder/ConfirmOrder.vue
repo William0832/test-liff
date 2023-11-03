@@ -25,7 +25,7 @@
       label.form-label(for="customer-name") 顧客姓名
       input.form-control#customer-name(type="text" v-model="order.customer.name")
     .col
-      label.form-label(for="customer-phone") 電話
+      label.form-label(for="customer-phone") 手機號碼
       input.form-control#customer-phone(type="tel" v-model="order.customer.phone")
 
   .special-box.mt-1.px-4.py-2
