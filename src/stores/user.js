@@ -4,6 +4,7 @@ import liff from '@line/liff'
 import { debug } from '../utils/swal'
 import { useRouter, useRoute } from 'vue-router'
 export const useUserStore = defineStore('user', () => {
+  const isAlreadyLogin = ref(false)
   const isLineLogin = ref(false)
   const userData = ref({
     id: '',
@@ -35,11 +36,12 @@ export const useUserStore = defineStore('user', () => {
       }
       const { userId: id, displayName: name, pictureUrl: imgUrl } = await liff.getProfile()
       userData.value = { id, name, imgUrl }
+      isAlreadyLogin.value = true
     } catch (err) {
       debug(err)
     }
   }
   return {
-    isLineLogin, userData, getLineUserData, isInClient
+    isAlreadyLogin, isLineLogin, userData, getLineUserData, isInClient
   }
 })

@@ -21,8 +21,9 @@ const routes = [
         if (!import.meta.env.DEV) {
           await userStore.getLineUserData()
         }
+
         const { name } = userStore.userData
-        if (name) ok(`Welcome ${name}`)
+        if (name && !userStore.isAlreadyLogin) ok(`Welcome ${name}`)
         await Promise.all([
           useShopStore().fetchShop(1),
           useMenuStore().fetchFoodsByTypes()
