@@ -22,9 +22,3 @@ const props = defineProps({
   }
 })
 </script>
-<style lang="sass" scoped>
-.menu
-  // flex: 1
-.nav-link
-  cursor: pointer
-</style>

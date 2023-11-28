@@ -17,7 +17,8 @@
 
 <script setup>
 import { useRouter } from 'vue-router'
-import { ref, onBeforeUnmount, onMounted } from 'vue'
+import { useObserver } from '@/composable/useObserver'
+import { ref } from 'vue'
 import { useMenuStore } from '@/stores/menu'
 import ItemCard from './ItemCard.vue'
 const props = defineProps({
@@ -37,35 +38,12 @@ const menuStore = useMenuStore()
 const tabView = ref()
 const itemEls = ref([])
 
-const observer = new IntersectionObserver(
-  (entries) => {
-    entries.forEach((entry) => {
-      if (entry.isIntersecting) {
-        const { id } = entry.target
-        menuStore.menuCurrentActiveId = id
-      } else {
-        menuStore.menuCurrentActiveId = ''
-      }
-    })
-  },
-  {
-    threshold: 1,
-    root: tabView.value,
-    rootMargin: '0px 0px -30px 0px'
+const observer = useObserver({
+  root: tabView.value,
+  els: itemEls.value,
+  activeCB: (entry) => {
+    const { id } = entry.target
+    menuStore.menuCurrentActiveId = id
   }
-)
-onMounted(() => {
-  itemEls.value.forEach(e => {
-    observer.observe(e)
-  })
 })
-onBeforeUnmount(() => {
-  console.log('onBeforeUnmount')
-  observer.disconnect()
-})
-
 </script>
-<style lang="sass">
-.tab-view
-  overflow: auto
-</style>

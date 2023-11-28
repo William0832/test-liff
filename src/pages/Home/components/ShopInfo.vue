@@ -4,10 +4,10 @@
   .info.p-2  {{ info }}
   .address.d-flex.align-items-center.p-2
     Icon(:icon="['far', 'fa-map']").me-3
-    .value {{ address }}
+    a(href="https://maps.app.goo.gl/GcKVQ6S3A1A4hY8g9" target="_blank") {{ address }}
   .phone.d-flex.align-items-center.p-2
     Icon(:icon="['fas', 'fa-phone']").me-3
-    .value {{ phone }}
+    a(:href="`tel:${phone}`") {{ phone }}
   .active-time.p-2.d-flex.justify-content-between
     .start.d-flex.align-items-center
       Icon(:icon="['far', 'fa-clock']").pe-3

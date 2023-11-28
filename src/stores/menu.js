@@ -2,6 +2,7 @@ import { defineStore } from 'pinia'
 import { useOrderStore } from './order'
 import { useShopStore } from './shop'
 import api from '@/utils/api'
+import { nextTick } from 'vue'
 const spicyLevels = [
   {
     id: 1, name: '完全不辣', isDefault: false
@@ -22,17 +23,17 @@ export const useMenuStore = defineStore('menu', {
       info: '',
       isShowOnTabs: true,
       items: [
-        { id: 1, typeId: 1, name: '蔬食炒泡麵', price: 120, info: '蔬食炒泡麵', isSaleOut: false, img: '' },
-        { id: 2, typeId: 1, name: '蔬食香腸炒泡麵', price: 150, info: '蔬食香腸炒泡麵', isSaleOut: false, img: '' }
+        // { id: 1, typeId: 1, name: '蔬食炒泡麵', price: 120, info: '蔬食炒泡麵', isSaleOut: false, img: '' },
+        // { id: 2, typeId: 1, name: '蔬食香腸炒泡麵', price: 150, info: '蔬食香腸炒泡麵', isSaleOut: false, img: '' }
       ],
       option: {
         spicyLevels,
         addItems: [
-          { id: 1, name: '加麵', price: 20, info: '加麵', isSaleOut: false, img: '' },
-          { id: 2, name: '韓式泡菜', price: 20, info: '韓式泡菜', isSaleOut: false, img: '' },
-          { id: 3, name: '素香腸', price: 20, info: '素香腸', isSaleOut: false, img: '' },
-          { id: 4, name: '雞蛋', price: 20, info: '雞蛋', isSaleOut: false, img: '' },
-          { id: 5, name: '菇菇', price: 20, info: '菇菇', isSaleOut: false, img: '' }
+          // { id: 1, name: '加麵', price: 20, info: '加麵', isSaleOut: false, img: '' },
+          // { id: 2, name: '韓式泡菜', price: 20, info: '韓式泡菜', isSaleOut: false, img: '' },
+          // { id: 3, name: '素香腸', price: 20, info: '素香腸', isSaleOut: false, img: '' },
+          // { id: 4, name: '雞蛋', price: 20, info: '雞蛋', isSaleOut: false, img: '' },
+          // { id: 5, name: '菇菇', price: 20, info: '菇菇', isSaleOut: false, img: '' }
         ]
       }
     }, {
@@ -51,7 +52,7 @@ export const useMenuStore = defineStore('menu', {
     addItems: [],
     currentTabIndex: 0,
     spicyLevels,
-    menuCurrentActiveId: null
+    menuCurrentActiveId: 'shop'
   }),
   getters: {
     getPrice () {
@@ -139,6 +140,14 @@ export const useMenuStore = defineStore('menu', {
           isSoldOut: e.isSoldOut
         }))
       return foods
+    },
+    async clickTab (id) {
+      const scrollOption = { behavior: 'smooth', block: 'start' }
+      await nextTick(() => {
+        const el = document.getElementById(id)
+        if (!el) return
+        el.scrollIntoView(scrollOption)
+      })
     }
   }
 })

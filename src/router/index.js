@@ -18,12 +18,6 @@ const routes = [
       const userStore = useUserStore()
       useOrderStore().readCart()
       try {
-        if (!import.meta.env.DEV) {
-          await userStore.getLineUserData()
-        }
-
-        const { name } = userStore.userData
-        if (name && !userStore.isAlreadyLogin) ok(`Welcome ${name}`)
         await Promise.all([
           useShopStore().fetchShop(1),
           useMenuStore().fetchFoodsByTypes()
@@ -148,12 +142,12 @@ const router = createRouter({
   routes
 })
 
-router.beforeEach((to, from) => {
-  const globalStore = useGlobalStore()
-  if (to.path.includes('admin')) {
-    if (globalStore.isAuth) return true
-    return { name: 'Login' }
-  }
-  return true
-})
+// router.beforeEach((to, from) => {
+//   const globalStore = useGlobalStore()
+//   if (to.path.includes('admin')) {
+//     if (globalStore.isAuth) return true
+//     return { name: 'Login' }
+//   }
+//   return true
+// })
 export default router

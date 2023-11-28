@@ -22,7 +22,7 @@
       .name 顧客姓名: {{ order?.owner.name }}
       .phone 顧客手機號碼: {{ order?.owner.phone }}
       //- .lineId Line: {{ order?.owner.lineId }}
-    .btns.d-flex.gap-2.justify-content-end.mt-3
+    .btns.d-flex.gap-2.mt-3.flex-column
       button.btn.btn-primary(
         v-if="isEdit"
         @click=""

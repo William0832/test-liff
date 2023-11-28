@@ -1,6 +1,5 @@
 <template lang="pug">
 .p-2.pt-3.h-100
-  TopToHome
   .item-Info.p-2.row.m-0
     .col-7
       h4.title.fw-semibold {{ item.name }}
@@ -55,17 +54,23 @@
         Icon(:icon="['fas', 'fa-minus']")
     .col
       input.form-control.amount-input.text-center(
-        type="number" min=1, v-model="order.amount"
+        type="number" min=1, v-model.number="order.amount"
       )
-    .col()
+    .col
       button.btn.badge.badge-pill.text-bg-primary.p-2(
         @click="addAmount(1)"
       )
         Icon(:icon="['fas', 'fa-plus']")
-  button.btn.btn-primary.w-100.d-flex.justify-content-center.align-items-center(@click="onSubmit")
-    span {{ cartId ? '修改購物車訂單': '加入購物車'}}
-    h5.pb-0.mb-0
-      span.badge.m-1.mt-2.ms-2.text-bg-light ${{ totalPrice || 0 }}
+  .d-flex.flex-column.gap-2
+    button.btn.btn-primary.d-flex.justify-content-center.align-items-center(
+      @click="onSubmit"
+    )
+      span {{ cartId ? '修改購物車訂單': '加入購物車'}}
+      h5.pb-0.mb-0
+        span.badge.m-1.ms-2.text-bg-light ${{ totalPrice || 0 }}
+    button.btn.btn-secondary(
+      @click="$router.go(-1)"
+    ) 返回
 </template>
 
 <script setup>
@@ -75,7 +80,6 @@ import { useRoute, useRouter } from 'vue-router'
 import { storeToRefs } from 'pinia'
 import { useMenuStore } from '@/stores/menu'
 import { useOrderStore } from '@/stores/order'
-import TopToHome from '@/components/TopToHome.vue'
 
 const orderStore = useOrderStore()
 const menuStore = useMenuStore()

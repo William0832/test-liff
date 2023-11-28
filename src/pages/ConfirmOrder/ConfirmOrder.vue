@@ -1,6 +1,5 @@
 <template lang="pug">
 .p-2.pt-3.h-100.wrapper.d-flex.flex-column
-  TopToHome
   h3.border-bottom.border-secondary.pb-2 確認餐點
 
   .time.p-2.d-flex.align-items-start
@@ -58,7 +57,6 @@ import { useRouter } from 'vue-router'
 import { useOrderStore } from '@/stores/order'
 import { storeToRefs } from 'pinia'
 import { useUserStore } from '@/stores/user'
-import TopToHome from '@/components/TopToHome.vue'
 import OrderProductCard from './components/OrderProductCard.vue'
 const router = useRouter()
 const userStore = useUserStore()
