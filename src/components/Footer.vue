@@ -28,9 +28,8 @@
 </template>
 
 <script setup>
-// import liff from '@line/liff'
-import { storeToRefs } from 'pinia'
 import { computed } from 'vue'
+import { storeToRefs } from 'pinia'
 import { useMenuStore } from '@/stores/menu'
 import { useOrderStore } from '@/stores/order'
 import { useRoute, useRouter } from 'vue-router'
@@ -41,16 +40,15 @@ const isConfirmOrder = computed(() => route.name === 'ConfirmOrder')
 const menuStore = useMenuStore()
 const orderStore = useOrderStore()
 const { cartItemLen, cartTotalMoney } = storeToRefs(orderStore)
-
+const { clickTab } = menuStore
 const showFooter = computed(() =>
   ['Home', 'ConfirmOrder'].includes(route.name)
 )
 const startToOrder = () => {
   if (isConfirmOrder.value) {
     router.push({ name: 'Home' })
-    return
   }
-  menuStore.scrollToShow('menu')
+  clickTab('food')
 }
 const submit = async () => {
   if (isConfirmOrder.value) {

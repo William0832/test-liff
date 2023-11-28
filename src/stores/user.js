@@ -1,7 +1,7 @@
 import { defineStore } from 'pinia'
 import { ref, computed } from 'vue'
 import liff from '@line/liff'
-import { debug } from '../utils/swal'
+import { debug, ng } from '../utils/swal'
 import { useRouter, useRoute } from 'vue-router'
 export const useUserStore = defineStore('user', () => {
   const isAlreadyLogin = ref(false)
@@ -41,7 +41,15 @@ export const useUserStore = defineStore('user', () => {
       debug(err)
     }
   }
+  const sendMsg = async (msg) => {
+    try {
+      await liff.sendMessages([msg])
+    } catch (err) {
+      ng(JSON.stringify(err))
+      console.warn(err)
+    }
+  }
   return {
-    isAlreadyLogin, isLineLogin, userData, getLineUserData, isInClient
+    isAlreadyLogin, isLineLogin, userData, getLineUserData, isInClient, sendMsg
   }
 })

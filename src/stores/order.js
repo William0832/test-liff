@@ -6,6 +6,7 @@ import storage from '@/utils/storage'
 import { useUserStore } from './user'
 import { socket } from '@/utils/io'
 import { ng, ok } from '../utils/swal'
+import { orderFlexMsg } from '../utils/liffFlexMsg'
 
 const STORAGE_CART_NAME = 'ohiyo-cart'
 const defaultCart = {
@@ -93,7 +94,7 @@ export const useOrderStore = defineStore('order', {
         name: name || this.order.customer.name,
         lineName: name || this.order.customer.lineName,
         lineId: id || this.order.customer.lineId,
-        phone: this.order.customer.phone
+        phone: this.order.customer.phone || localStorage.getItem('phone') || ''
       }
     },
     readCart () {
@@ -189,6 +190,11 @@ export const useOrderStore = defineStore('order', {
         ng('請輸入手機號碼！')
         return
       }
+      if (this.order.customer.phone === '') {
+        ng('手機號碼格式不正確！')
+        return
+      }
+      localStorage.setItem('phone', this.order.customer.phone)
       const payload = {
         customer: this.order.customer,
         cart: this.cart,
@@ -205,6 +211,12 @@ export const useOrderStore = defineStore('order', {
           time: new Date()
         })
       }
+      const msg = orderFlexMsg(order)
+      // `成功下單! 訂單編號: ${order.id}`
+      await Promise.all([
+        useUserStore().sendMsg(msg),
+        useUserStore().sendMsg({ type: 'text', text: `--orderId: ${order.id}` })
+      ])
       return order
     },
     async fetchOrder (id) {
