@@ -12,7 +12,7 @@ Teleport(to="body")
 <style lang="sass" scoped>
 .loading
   background-color: black
-  position: absolute
+  position: fixed
   width: 100%
   height: 100%
   top: 0
